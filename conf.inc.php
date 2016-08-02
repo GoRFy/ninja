@@ -7,7 +7,6 @@ define("DBHOST","localhost");
 define("DBUSER","root");
 date_default_timezone_set('Europe/Paris');
 
-
 if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
     define("DBPWD","");
 } else {
@@ -32,6 +31,7 @@ $errors_msg = [
 	"new_teamName"=>"Incorrect team name or allready exists",
 	"email_exist"=>"Couldn't find this email",
   "date_format"=>"Please stick to this date format => dd/mm/yyy",
-  "time_format" => "Please stick to this time format => hh:mm"
+  "time_format" => "Please stick to this time format => hh:mm",
+  "useless"=>""
 
 ];

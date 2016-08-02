@@ -23,23 +23,7 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-4">
-        <div class="panel panel-warning">
-            <div class="panel-heading">Signaled Comment</div>
-            <div class="panel-body">
-              <?php
 
-              foreach($signaledComment as $comment){
-                echo "Id: ".$comment->getId(). " - " .$comment->getIdComment();
-                ?>
-                <a href=# data-url="event/deleteComment/<?= $comment->getId() ?>" class="ajax-link">Delete </a> - <a href=# data-url="event/cancelSignalment/<?= $comment->getId() ?>" class="ajax-link">Cancel </a>
-                <?php
-              }
-
-              ?>
-            </div>
-        </div>
-    </div>
     <!-- <iframe id="frameAdminGlobal"src="" width="100%" heigth="300"></iframe> -->
 </div>
 

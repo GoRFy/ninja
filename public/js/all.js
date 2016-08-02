@@ -104,19 +104,81 @@ $(function ($) {
     -- AJAX FORMS --
 **********************/
 
-$(function ($) {
-  $(".ajax-form, .ajax-link").on("click submit", function (ev) {
 
+$(function ($) {
+
+  $("#showUsers").click(function(e){
+    $('#showUsers').css('display','none');
+    $('.fourUsers').css('display','none');
+    $('.allUsers').css('display','inline-block');
+  })
+
+  $("#hideAllUsers").click(function(e){
+    $('#showUsers').css('display','inline-block');
+    $('.fourUsers').css('display','inline-block');
+    $('.allUsers').css('display','none');
+  })
+
+  $(".askToJoinForm").submit(function(e){
+    e.preventDefault();
+
+    var message = $('#message').val();
+    var idTeam = $(this).attr('action').split("/");
+    idTeam = idTeam[idTeam.length-1];
+    if(message === ''){
+      message = "J'aimerais vous rejoindre !";
+    }
+      $.ajax({
+        url:$(this).attr('action'),
+        type:$(this).attr('method'),
+        data:{"message" : message,"idTeam":idTeam},
+        success: function(){
+          var container = $("#askToJoinHidden");
+          container.fadeOut();
+        	$('#fade').remove();
+          showMessage("Invitation envoyée", "success");
+        }
+      })
+
+  })
+
+  $("#askToJoin").click(function(e){
+    $('#askToJoinHidden').fadeIn();
+    //Lorsque vous cliquez sur un lien de la classe poplight et que le href commence par #
+  	var popID = $(this).attr('rel'); //Trouver la pop-up correspondante
+
+  	//Récupération du margin, qui permettra de centrer la fenêtre - on ajuste de 80px en conformité avec le CSS
+  	var popMargTop = ($('#' + popID).height() + 80) / 2;
+  	var popMargLeft = ($('#' + popID).width() + 80) / 2;
+
+
+  	//Effet fade-in du fond opaque
+  	$('body').append('<div id="fade"></div>'); //Ajout du fond opaque noir
+  	//Apparition du fond - .css({'filter' : 'alpha(opacity=80)'}) pour corriger les bogues de IE
+  	$('#fade').css({'filter' : 'alpha(opacity=80)'}).fadeIn();
+
+  	return false;
+  });
+
+
+  $(document).mouseup(function(e){
+      var container = $("#askToJoinHidden");
+      if(!container.is(e.target) && container.has(e.target).length === 0){
+        container.fadeOut();
+      	$('#fade').remove();  //...ils disparaissent ensemble
+        //$("html").append($('<style>html:after{ content:""; position:"";left:"";right:"";top:"";bottom:"";background:"";}</style>'));
+      }
+  });
+
+  $(".ajax-form, .ajax-link").on("click submit", function (ev) {
       // Handle click on empty input
       if ($(ev.target).attr("href") == undefined && ev.type == "click") {
           return;
       }
-
       ev.preventDefault();
       var action = $(this).attr("action");
       var method = $(this).attr("method");
       var success = $(this).data("success");
-      var lock = false;
       var data = {};
       data.message = $(this).data("message");
       data.callback = $(this).data("callback");
@@ -133,24 +195,8 @@ $(function ($) {
 
           action = $(this).data("url");
           action = window.location.origin+"/"+window.location.pathname.split("/",2)[1]+"/"+action;
-          if($(this).is(".prompt")){
-            var promptInput = prompt("Add a message with your invitation");
-            if(promptInput){
-              data.messageInvit = promptInput;
-              lock = true;
-            }else if(promptInput == null){
-              return;
-            }else if(promptInput === ""){
-              data.messageInvit = "I want to join you !";
-              lock = true;
-            }
-          }else{
-            if(confirm("Are you sure ?")){
-              lock = true;
-            }
-          }
+
       } else {
-          lock = true;
           $.each($(this).find("input, select, textarea"), function () {
               if ($(this).attr("type") == "checkbox" || $(this).attr("type") == "radio") {
                   if ($(this).is(":checked")) {
@@ -162,7 +208,7 @@ $(function ($) {
           });
       }
 
-      if (!$.isEmptyObject(data) && lock == true) {
+      if (!$.isEmptyObject(data)) {
             $.ajax({
                 method: method,
                 url: action,
@@ -196,8 +242,8 @@ function showMessage(msg, code) {
     $box.fadeIn();
     setTimeout(function () {
         $box.fadeOut();
-        //window.location.reload(false);
-    }, 5000);
+        window.location.reload(false);
+    }, 2000);
 }
 
 /***************************
@@ -378,55 +424,27 @@ $(function ($) {
     });
     $("#search-content").keyup(function(){
         var search = $('#search-content').val();
-        var select = $('#select-criteria').val();
-
-        //Valeurs des options du select
-        if (page == "team"){
-            if (select == 1){
-                var column = "teamName";
-            } else if (select == 2){
-                var column = "sports";
-            } else {
-                var column = "description";
-            }
-        } if (page == "user") {
-            if (select == 1){
-                var column = "username";
-            } else if (select == 2){
-                var column = "country";
-            } else {
-                var column = "city";
-            }
-        } if (page == "event") {
-            if (select == 1){
-                var column = "name";
-            } else if (select == 2){
-                var column = "owner_name";
-            } else if (select == 3){
-                var column = "tags";
-            }
-        }
-        var arraySearch = [column,search];
+        console.log("t");
         if (search != "") {
             $("#all-content").hide();
             $("#pages").hide();
             if (page == "team"){
                 //Recherche Team
-                $.getJSON(webrootJs+"team/search/"+arraySearch, function(teams) {
+                $.getJSON(webrootJs+"team/search/"+search, function(teams) {
                     if (teams != null) {
                         $("#search-content-results").empty();
                         for (var team in teams) {
                             $("#search-content-results").append('<div class="col-sm-6">' +
                                 '                            <div class="panel panel-primary">' +
-                                '                            <div class="panel-heading"><h3 class="center header-li "><a href="' + webrootJs + 'team/show/' + teams[team].id + '"> Group ' + teams[team].teamName + '</a></h3></div>' +
+                                '                            <div class="panel-heading"><h3 class="center header-li "><a href="' + webrootJs + 'team/show/' + teams[team].id + '"> ' + teams[team].teamName + '</a></h3></div>' +
                                 '                            <div class="panel-body">' +
                                 '                            <ul class="header-ul">' +
                                 '                            <li class="li-list">' +
-                                '                            <span class="form-info">Name : </span>' +
+                                '                            <span class="form-info">Nom : </span>' +
                                 '                        <span class="form-content">' + teams[team].teamName + '</span>' +
                                 '                            </li>' +
                                 '                            <li class="li-list">' +
-                                '                            <span class="form-info">Date Of Creation : </span>' +
+                                '                            <span class="form-info">Date de création : </span>' +
                                 '                        <span class="form-content">' + teams[team].dateCreated + '</span>' +
                                 '                            </li>' +
                                 '                            <li class="li-list">' +
@@ -451,13 +469,13 @@ $(function ($) {
                 });
             } if (page == "user") {
                 //Recherche User
-                $.getJSON(webrootJs+"user/search/"+arraySearch, function(users) {
+                $.getJSON(webrootJs+"user/search/"+search, function(users) {
                     if (users != null) {
                         $("#search-content-results").empty();
                         for (var user in users) {
                             $("#search-content-results").append('<div class="col-sm-6">' +
                                 '                            <div class="panel panel-primary2">' +
-                                '                            <div class="panel-heading"><h3 class="center header-li "><a href="' + webrootJs + 'user/show/' + users[user].id + '"> User ' + users[user].username + '</a></h3></div>' +
+                                '                            <div class="panel-heading"><h3 class="center header-li "><a href="' + webrootJs + 'user/show/' + users[user].id + '"> ' + users[user].username + '</a></h3></div>' +
                                 '                            <div class="panel-body">' +
                                 '                            <ul class="header-ul">' +
                                 '                            <li class="li-list">' +
@@ -465,16 +483,12 @@ $(function ($) {
                                 '                        <span class="form-content">' + users[user].email + '</span>' +
                                 '                            </li>' +
                                 '                            <li class="li-list">' +
-                                '                            <span class="form-info">Country : </span>' +
-                                '                        <span class="form-content">' + users[user].country + '</span>' +
-                                '                            </li>' +
-                                '                            <li class="li-list">' +
-                                '                            <span class="form-info">City : </span>' +
+                                '                            <span class="form-info">Ville : </span>' +
                                 '                        <span class="form-content">' + users[user].city  + '</span>' +
                                 '                            </li>' +
                                 '                            <li class="li-list">' +
-                                '                            <span class="form-info">Birthday : </span>' +
-                                '                        <span class="form-content">' + users[user].birthday  + '</span>' +
+                                '                            <span class="form-info">Age : </span>' +
+                                '                        <span class="form-content">' + getAge(users[user].birthday)  + '</span>' +
                                 '                            </li>' +
                                 '                            </ul>' +
                                 '                            </div>' +
@@ -490,7 +504,7 @@ $(function ($) {
                     }
                 });
             } if(page == "event") {
-                $.getJSON(webrootJs+"event/search/"+arraySearch, function(events) {
+                $.getJSON(webrootJs+"event/search/"+search, function(events) {
                     if (events != null) {
                         $("#search-content-results").empty();
                         $.each(events, function (key, data) {
@@ -560,44 +574,17 @@ $(function ($) {
 });
 
 
-
-/******************
-    USER RATE
-******************/
-
-
-$(function ($) {
-    getUserRate();
-    $(".js-user-vote").click(function (ev) {
-        rateUser(
-            $(ev.target).data("vote"),
-            $(ev.target).parent().data("userid")
-        );
-    });
-});
-
-function getUserRate() {
-    var userId = $(".js-rate-user").data("userid");
-    $.ajax({
-        method: "GET",
-        url: webrootJs + "rate/getRate/" + userId
-    }).then(function (data) {
-        $(".js-rate-user").html(data.rate);
-    });
-}
-
-function rateUser (vote, userId) {
-    var rate;
-    if (vote == "up") {
-        rate = 1;
-    } else if (vote == "down") {
-        rate = 0;
+function getAge(dateString) {
+    var today = new Date();
+    var birthDate = new Date(dateString);
+    var age = today.getFullYear() - birthDate.getFullYear();
+    var m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
     }
-
-    $.ajax({
-        method: "GET",
-        url: webrootJs + "rate/rateUser/" + userId + "/" + rate
-    }).then(function (data) {
-        getUserRate();
-    });
+    if(!isNaN(age)){
+      return age+" ans";
+    }else{
+      return "";
+    }
 }

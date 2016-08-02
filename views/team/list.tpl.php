@@ -2,15 +2,10 @@
 
     <script type="text/javascript"> var page = "team";</script>
 
-    <p align="center"><a href="<?= WEBROOT;?>team/create"class="btn btn-primary">Create your own now!</a></p>
+    <p align="center"><a href="<?= WEBROOT;?>team/create"class="btn btn-primary">Créer la tienne dès maintenant !</a></p>
     <div align="center">
-        <h3 class="center header-li ">Or find one :</h3>
+        <h3 class="center header-li ">Ou trouves en une :</h3>
         <input type="text" id="search-content">
-        <select id="select-criteria">
-            <option value="1" selected>By name</option>
-            <option value="2">By sport</option>
-            <option value="3">By description</option>
-        </select>
     </div>
     <div id="search-content-results""></div>
 
@@ -23,16 +18,21 @@
             echo '
                 <div class="col-sm-6">
                     <div class="panel panel-primary">
-                        <div class="panel-heading"><h3 class="center header-li "><a href="'.WEBROOT.'team/show/'.$team->getId().'"> Group '.$team->getTeamName().'</a></h3></div>
+                        <div class="panel-heading"><h3 class="center header-li "><a href="'.WEBROOT.'team/show/'.$team->getId().'"> '.$team->getTeamName().'</a></h3></div>
                         <div class="panel-body">
                             <ul class="header-ul">
                                 <li class="li-list">
-                                    <span class="form-info">Name : </span>
+                                    <span class="form-info">Nom : </span>
                                     <span class="form-content">'.$team->getTeamName().'</span>
                                 </li>
                                 <li class="li-list">
-                                    <span class="form-info">Date Of Creation : </span>
-                                    <span class="form-content">'.$team->getDateCreated().'</span>
+                                    <span class="form-info">Date de création : </span>
+                                    ';
+                                      $dateCreation = $team->getDateCreated();
+                                      $mois = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+                                      $date = date("d ",strtotime($dateCreation)). $mois[(date("n ",strtotime($dateCreation))- 1)]. date(" Y à H:i",strtotime($dateCreation));
+                                    echo '
+                                    <span class="form-content">'.$date.'</span>
                                 </li>
                                 <li class="li-list">
                                     <span class="form-info">Sports : </span>
@@ -63,5 +63,3 @@ for($i=1; $i<=$nombreDePages; $i++){
 echo '</p>';
 ?>
 </div>
-
-

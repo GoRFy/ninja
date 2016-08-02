@@ -1,15 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>SPORT NATION</title>
-    <link rel="stylesheet" type="text/css" href="<?= WEBROOT;?>public/css/grid.css">
-    <link rel="stylesheet" type="text/css" href="<?= WEBROOT;?>public/css/global.css">
-    <link rel="stylesheet" type="text/css" href="<?= WEBROOT;?>public/css/panel.css">
-    <link rel="stylesheet" type="text/css" href="<?= WEBROOT;?>public/css/button.css">
-    <link rel="stylesheet" type="text/css" href="<?= WEBROOT;?>public/css/landing.css">
-</head>
-<body>
+
 <div class="row">
     <div class="col-sm-6">
         <h1>Site plan</h1>
@@ -40,13 +29,6 @@
             <li>Event edit</li>
             <li>Events comments</li>
         </ul>
-        <h3>Inbox</h3>
-        <h3>RSS</h3>
     </div>
 </div>
 </div>
-
-
-
-</body>
-</html>

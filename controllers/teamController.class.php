@@ -34,10 +34,10 @@ class teamController
 
 					$captain->setIdTeam($id_team);
 					$captain->setIdUser($id_user_creator);
-					$captain->setCaptain(2);
+					$captain->setCaptain(3);
 					$captain->save();
 
-					$view->assign("success","Your team has been created");
+					$view->assign("success","Votre équipe a bien été crée");
 				}
 			}
 			$view->setView("team/create.tpl");
@@ -71,7 +71,7 @@ class teamController
 						$path = "public/img/teams/".trim(strtolower($_POST["teamName"])).".".strtolower(substr(strrchr($_FILES['avatar']['name'], '.'), 1));
 						$movingFile = move_uploaded_file($_FILES['avatar']['tmp_name'], $path);
 						if($movingFile){
-							$view->assign("success","Changes has been saved");
+							$view->assign("success","Changment pris en compte !");
 							$team->setAvatar($path);
 							//Suppression des anciennes images, si l'extension changeait ça en enregistrait deux, cordialement
 							if($dossier = opendir('public/img/teams')){
@@ -83,14 +83,14 @@ class teamController
 								}
 							}
 						}else{
-							$view->assign("movingFile", "An error while seting your team avatar");
+							$view->assign("movingFile", "Une erreur est survenue durant la mise en place de votre avatar !");
 						}
 					}
 					unlink($_SESSION['temp_idTeam']);
 					$team->setTeamName($_POST["teamName"]);
 					$team->setDescription($_POST["description"]);
 					$team->save();
-					$view->assign("success","Changes has been saved");
+					$view->assign("success","Changement pris en compte !");
 				}
 			}
 			$captain = Captain::findBy(["idUser","idTeam"],[$_SESSION['user_id'],$args[0]],["int","int"]);
@@ -116,6 +116,9 @@ class teamController
       $view->setView("team/show.tpl");
 
 			$invitationFromTeam = Invitation::findBy(["idUserInvited","idTeamInviting","type"],[$_SESSION['user_id'],$args[0],0],['int',"int","int"]);
+
+			$formAskToJoin = $team->getForm("askToJoin");
+			$view->assign("formAskToJoin",$formAskToJoin);
 
       $view->assign("invitation",$invitation);
       $view->assign("members",$members);
@@ -241,7 +244,7 @@ class teamController
 	public function demoteAction($args){
 		if(User::isConnected() && isset($args["idTeam"]) && isset($args["idUser"])){
 		 	$captain = Captain::findBy(["idUser","idTeam"],[$_SESSION['user_id'],$args["idTeam"]],["int","int"]);
-		    if(!($captain->getCaptain() > 0)){
+		    if(!($captain[0]->getCaptain() > 0)){
 		      header('Location:'.WEBROOT.'user/login');
 		    }
 		    $userToDemote = Captain::findBy(["idUser","idTeam"],[$args["idUser"],$args["idTeam"]],["int","int"]);
@@ -253,7 +256,7 @@ class teamController
                 $nameTeam =$team->getTeamName();
                 Notification::createNotification($id_user=$args["idUser"],$message="You've got demoted of your captain function in the group ".$nameTeam." !",$action=WEBROOT."team/show/".$args["idTeam"]);
 		    }
-				Helpers::getMessageAjaxForm("User has been demoted !");
+				Helpers::getMessageAjaxForm("Joueur rétrogradé !");
 		 }else{
 		 	//A voir la redirection
 		 	header('Location:'.WEBROOT.'user/login');
@@ -263,11 +266,9 @@ class teamController
 	public function searchAction($args)
 	{
 		header('Content-Type: application/json');
-		$args = implode(",", $args);
-		$args = explode(",", $args);
 		$args1 = $args[0];
-		$args2 = $args[1];
-		$teams = Team::findByLikeArray($args1,$args2);
+		$columns = ["teamName","description","sports"];
+		$teams = Team::findByLikeArray($columns,$args1);
 		echo json_encode($teams);
 	}
 
@@ -281,19 +282,19 @@ class teamController
 	public function promoteAction($args){
 		if(User::isConnected() && isset($args["idTeam"]) && isset($args["idUser"])){
 		 	$captain = Captain::findBy(["idUser","idTeam"],[$_SESSION['user_id'],$args["idTeam"]],["int","int"]);
-		    if(!($captain->getCaptain() > 0)){
+		    if(!($captain[0]->getCaptain() > 0)){
 		      header('Location:'.WEBROOT.'user/login');
 		    }
 		    $userToPromote = Captain::findBy(["idUser","idTeam"],[$args["idUser"],$args["idTeam"]],["int","int"]);
 		    // Si l'utilisateur a un role de captain 0 ou 1, donc pas admin
-		    if($userToPromote->getCaptain() < 2 ){
-		    	$userToPromote->setCaptain($userToPromote->getCaptain()+1);
+		    if($userToPromote[0]->getCaptain() < 2 ){
+		    	$userToPromote[0]->setCaptain($userToPromote[0]->getCaptain()+1);
 				$team =Team::findById($args["idTeam"]);
 				$nameTeam =$team->getTeamName();
 				Notification::createNotification($id_user=$args["idUser"],$message="You've got promoted to captain of the group ".$nameTeam." !",$action=WEBROOT."team/show/".$args["idTeam"]);
-		    	$userToPromote->save();
+		    	$userToPromote[0]->save();
 		    }
-				Helpers::getMessageAjaxForm("User has been promoted !");
+				Helpers::getMessageAjaxForm("Joueur promu !");
 		 }else{
 		 	//A voir la redirection
 		 	header('Location:'.WEBROOT.'user/login');
@@ -303,7 +304,7 @@ class teamController
 	public function kickAction($args){
 		 if(User::isConnected() && isset($args["idTeam"]) && isset($args["idUser"])){
 		 	$captain = Captain::findBy(["idUser","idTeam"],[$_SESSION['user_id'],$args["idTeam"]],["int","int"]);
-		    if(!($captain->getCaptain() > 0)){
+		    if(!($captain[0]->getCaptain() > 0)){
 		      header('Location:'.WEBROOT.'user/login');
 		    }
 		    $captains = Captain::findBy(['idUser','idTeam'],[$args['idUser'],$args["idTeam"]],["int","int"]);
@@ -317,7 +318,7 @@ class teamController
 					$user->delete();
 				}
 
-				Helpers::getMessageAjaxForm("User has been kicked !");
+				Helpers::getMessageAjaxForm("Le joueur a bien été exclu !");
              $team = Team::findById($args["idTeam"]);
              $nameTeam = $team->getTeamName();
              Notification::createNotification($id_user=$args['idUser'],$message="You've got kicked out of the group ".$nameTeam." !",$action=WEBROOT."team/show/".$args["idTeam"]);
@@ -329,30 +330,30 @@ class teamController
 	}
 
 	public function leaveAction($args){
-		if(User::isConnected() && isset($args[0])){
-		    $captains = Captain::findBy(['idUser','idTeam'],[$_SESSION['user_id'],$args[0]],["int","int"]);
+		if(User::isConnected() && isset($args["idTeam"])){
+		    $captains = Captain::findBy(['idUser','idTeam'],[$_SESSION['user_id'],$args["idTeam"]],["int","int"]);
 				foreach($captains as $captain){
 					$captain->delete();
 				}
 
-		   $users =  TeamHasUser::findBy(['idUser','idTeam'],[$_SESSION['user_id'],$args[0]],["int","int"]);
+		   	$users =  TeamHasUser::findBy(['idUser','idTeam'],[$_SESSION['user_id'],$args["idTeam"]],["int","int"]);
 				foreach($users as $user){
 					$user->delete();
 				}
 
-        $team = Team::findById($args[0]);
+        $team = Team::findById($args["idTeam"]);
         $nameTeam = $team->getTeamName();
         $user = User::findById($_SESSION['user_id']);
         $userName = $user->getUsername();
-        Notification::createNotification($id_user=$_SESSION['user_id'],$message="The member ".$userName." has just left the group ".$nameTeam." !",$action=$action=WEBROOT."team/show/".$args[0]);
+        Notification::createNotification($id_user=$_SESSION['user_id'],$message="The member ".$userName." has just left the group ".$nameTeam." !",$action=$action=WEBROOT."team/show/".$args["idTeam"]);
 
         // on véifie qu'apres avoir quitté l'equipe il y a encore des membres, sinon on supprime l'equipe
-		    if(TeamHasUser::findBy("idTeam",$args[0],"int") == false){
-		    	$team = Team::findBy("id",$args[0],"int");
+		    if(TeamHasUser::findBy("idTeam",$args["idTeam"],"int") == false){
+		    	$team = Team::findBy("id",$args["idTeam"],"int");
 					$team[0]->delete();
 		    }
 
-				Helpers::getMessageAjaxForm("Invitation canceled !");
+				Helpers::getMessageAjaxForm("Équipe quittée !");
 		 }else{
 		 	//A voir la redirection
 		 	header('Location:'.WEBROOT.'user/login');
@@ -363,7 +364,7 @@ class teamController
 		if((User::isConnected() && isset($args[0]) && isset($_SESSION['user_id']) ) || User::isAdmin()){
 		 	$captain = Captain::findBy(["idUser","idTeam"],[$_SESSION['user_id'],$args[0]],["int","int"]);
 				if(!User::isAdmin()){
-					if(!($captain->getCaptain() > 0) ){
+					if(!($captain[0]->getCaptain() > 0) ){
 						header('Location:'.WEBROOT.'user/login');
 					}
 				}
@@ -384,7 +385,7 @@ class teamController
 				}
 
 
-			Helpers::getMessageAjaxForm("Team deleted !");
+			Helpers::getMessageAjaxForm("Équipe supprimée !");
 		 }else{
 		 	//A voir la redirection
 		 	header('Location:'.WEBROOT.'user/login');
@@ -423,7 +424,7 @@ class teamController
 			$userName = $user->getUsername();
 			Notification::createNotification($id_user=$captain,$message="The member ".$userName." has just join the group ".$nameTeam." !",$action=$action=WEBROOT."team/show/".$args["idTeam"]);
 
-			Helpers::getMessageAjaxForm("Invitation accepted !");
+			Helpers::getMessageAjaxForm("Invitation acceptée !");
 		}else{
 		 	//A voir la redirection
 			header('Location:'.WEBROOT.'user/login');
@@ -432,19 +433,19 @@ class teamController
 
 	public function askToJoinAction($args){
 		if(User::isConnected()){
+			var_dump($args);
 			$invitation = new Invitation();
 			if(!Invitation::findBy(["idUserInvited","idTeamInviting","type"],[$_SESSION['user_id'],$args['idTeam'],1],['int',"int","int"])){
 				$now = date("Y-m-d H:i:s");
 				$invitation->setDateInvited($now);
-				if(!empty($args['messageInvit'])){
-					$invitation->setMessage($args['messageInvit']);
+				if(!empty($args['message'])){
+					$invitation->setMessage($args['message']);
 				}
 				$invitation->setType(1);
 				$invitation->setIdTeamInviting($args["idTeam"]);
 				$invitation->setIdUserInvited($_SESSION['user_id']);
 				$invitation->save();
 			}
-			Helpers::getMessageAjaxForm("Invitation sent !");
 		}else{
 		 	//A voir la redirection
 			header('Location:'.WEBROOT.'user/login');
@@ -465,7 +466,7 @@ class teamController
 			}
 
 
-			Helpers::getMessageAjaxForm("Invitation canceled !");
+			Helpers::getMessageAjaxForm("Invitation refusée !");
 		}else{
 		 	//A voir la redirection
 			header('Location:'.WEBROOT.'user/login');

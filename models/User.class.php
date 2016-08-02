@@ -15,10 +15,7 @@ class User extends basesql
 	protected $phone_number = 0;
 	protected $favorite_sports = "";
 	protected $city = "";
-	protected $zipcode =0;
-	protected $country = "";
-	protected $street = "";
-	protected $birthday;
+	protected $birthday= "0000-00-00";
 	protected $avatar = "";
 	protected $dateCreated;
 	protected $is_admin;
@@ -38,14 +35,9 @@ class User extends basesql
 		"avatar",
 		"favorite_sports",
 		"city",
-		"country",
-		"zipcode",
-		"street",
 		"birthday",
 		"dateCreated"
 	];
-
-
 	/**
 	* @param array
 	* Init new user
@@ -94,18 +86,6 @@ class User extends basesql
 		return $this->city;
 	}
 
-	public function getZipcode(){
-		return $this->zipcode;
-	}
-
-	public function getCountry(){
-		return $this->country;
-	}
-
-	public function getStreet(){
-		return $this->country;
-	}
-
 	public function getBirthday(){
 		return $this->birthday;
 	}
@@ -131,7 +111,7 @@ class User extends basesql
 	}
 
 	public function setEmail($email){
-		$this->email = $email;
+		$this->email = htmlspecialchars($email);
 	}
 
 	public function setPassword($password){
@@ -147,31 +127,19 @@ class User extends basesql
 	}
 
 	public function setPhoneNumber($phone_number){
-		$this->phone_number = $phone_number;
+		$this->phone_number = htmlspecialchars($phone_number);
 	}
 
 	public function SetFavoriteSports($favorite_sports){
-		$this->favorite_sports = $favorite_sports;
+		$this->favorite_sports = htmlspecialchars($favorite_sports);
 	}
 
 	public function setCity($city){
-		$this->city = $city;
-	}
-
-	public function setZipcode($zipcode){
-		$this->zipcode = $zipcode;
-	}
-
-	public function setCountry($country){
-		$this->country = $country;
-	}
-
-	public function setStreet($street){
-		$this->street = $street;
+		$this->city = htmlspecialchars($city);
 	}
 
 	public function setBirthday($birthday){
-		$this->birthday = $birthday;
+		$this->birthday = htmlspecialchars($birthday);
 	}
 
 	public function setAvatar($avatar){
@@ -230,6 +198,10 @@ class User extends basesql
 		else {
 			return False;
 		}
+	}
+
+	public static function getAge($birthday){
+		return (int) ((time() - strtotime($birthday)) / 3600 / 24 /365);
 	}
 
 	/**
@@ -360,13 +332,13 @@ class User extends basesql
 		$form = [];
 		if ($formType == "subscription") {
 			$form = [
-				"title" => "Want to join the Nation ?",
-				"buttonTxt" => "Sign Up",
+				"title" => "Envie de rejoindre la Nation ?",
+				"buttonTxt" => "S'incrire",
 				"options" => ["method" => "POST", "action" => WEBROOT . "user/subscribe"],
 				"struct" => [
 					"email"=>[ "type"=>"email", "class"=>"form-control", "placeholder"=>"Email", "required"=>1, "msgerror"=>"new_email"
 					],
-					"username"=>[ "type"=>"text", "class"=>"form-control", "placeholder"=>"Username", "required"=>1, "msgerror"=>"new_username"
+					"username"=>[ "type"=>"text", "class"=>"form-control", "placeholder"=>"Pseudo", "required"=>1, "msgerror"=>"new_username"
 					],
 					"form-type" => ["type" => "hidden", "value" => "subscription", "placeholder" => "", "required" => 0, "msgerror" => "hidden input", "class" => ""
 					]
@@ -375,13 +347,13 @@ class User extends basesql
 		}
 		else if ($formType == "activation") {
 			$form = [
-				"title" => "Welcome back ! Please choose a password to activate your account.",
+				"title" => "Choisissez un mot de passe pour valider votre compte !",
 				"buttonTxt" => "Activate",
 				"options" => ["method" => "POST", "action" => WEBROOT . "user/activate?email=".$this->getEmail()."&token=".$this->getToken()],
 				"struct" => [
-					"password"=>[ "type"=>"password", "class"=>"form-control", "placeholder"=>"Password", "required"=>1, "msgerror"=>"password"
+					"password"=>[ "type"=>"password", "class"=>"form-control", "placeholder"=>"Mot de passe", "required"=>1, "msgerror"=>"password"
 					],
-					"confpassword"=>[ "type"=>"password", "class"=>"form-control", "placeholder"=>"Confirm your password", "required"=>1, "msgerror"=>"confirm_password"
+					"confpassword"=>[ "type"=>"password", "class"=>"form-control", "placeholder"=>"Confirmez mot de passe", "required"=>1, "msgerror"=>"confirm_password"
 					],
 					"form-type" => ["type" => "hidden", "value" => "activation", "placeholder" => "", "required" => 0, "msgerror" => "hidden input", "class" => ""
 					]
@@ -390,13 +362,13 @@ class User extends basesql
 		}
 		else if ($formType == "login") {
 			$form = [
-				"title" => "Already a sport citizen ?",
-				"buttonTxt" => "Sign In",
+				"title" => "Connexion",
+				"buttonTxt" => "Connexion",
 				"options" => ["method" => "POST", "action" => WEBROOT . "user/login"],
 				"struct"=>[
 					"email"=>[ "type"=>"email", "class"=>"form-control", "placeholder"=>"Email", "required"=>1, "msgerror"=>"email"
 					],
-					"password"=>[ "type"=>"password", "class"=>"form-control", "placeholder"=>"Password", "required"=>1, "msgerror"=>"password"
+					"password"=>[ "type"=>"password", "class"=>"form-control", "placeholder"=>"Mot de passe", "required"=>1, "msgerror"=>"password"
 					],
 					"form-type" => ["type" => "hidden", "value" => "login", "placeholder" => "", "required" => 0, "msgerror" => "hidden input", "class" => ""
 					]
@@ -404,33 +376,25 @@ class User extends basesql
 			];
 		} else if ($formType == "edit") {
 			$form = [
-				"title" => "Account params",
-				"buttonTxt" => "Confirm",
+				"buttonTxt" => "Confirmez",
 				"options" => ["method" => "POST", "action" => WEBROOT . "user/edit/" . $this->id,"enctype"=>"multipart/form-data"],
 				"struct"=>[
-					"avatar"=>["type"=>"file","class"=>"form-control","placeholder"=>"Your avatar","required"=>0,"msgerror"=>"avatar","value"=>$this->getAvatar()
+					"avatar"=>["type"=>"file","class"=>"form-control","placeholder"=>"Votre avatar","required"=>0,"msgerror"=>"avatar","value"=>$this->getAvatar()
 					],
 					"email"=>[ "type"=>"email", "class"=>"form-control", "placeholder"=>"Email", "required"=>1, "msgerror"=>"", "value" => $this->getEmail()
 					],
-					"username"=>[ "type"=>"text", "class"=>"form-control", "placeholder"=>"Username", "required"=>1, "msgerror"=>"username", "value" => $this->getUsername()
+					"username"=>[ "type"=>"text", "class"=>"form-control", "placeholder"=>"Pseudo", "required"=>1, "msgerror"=>"username", "value" => $this->getUsername()
 					],
-					"first_name"=>[ "type"=>"text", "class"=>"form-control", "placeholder"=>"First name", "required"=>0, "msgerror"=>"first_name", "value" => $this->getFirstName()
+					"first_name"=>[ "type"=>"text", "class"=>"form-control", "placeholder"=>"Prénom", "required"=>0, "msgerror"=>"first_name", "value" => $this->getFirstName()
 					],
-					"last_name"=>[ "type"=>"text", "class"=>"form-control", "placeholder"=>"Last name", "required"=>0, "msgerror"=>"last_name", "value" => $this->getLastName()
+					"last_name"=>[ "type"=>"text", "class"=>"form-control", "placeholder"=>"Nom", "required"=>0, "msgerror"=>"last_name", "value" => $this->getLastName()
 					],
-					"favorite_sports"=>[ "type"=>"select", "class"=>"form-control", "placeholder"=>"Favorite sports", "required"=>0, "msgerror"=>"favorite_sports", "value" => $this->getFavoriteSports()
+					"favorite_sports"=>[ "type"=>"select", "class"=>"form-control", "placeholder"=>"Sports préférés", "required"=>0, "msgerror"=>"favorite_sports", "value" => $this->getFavoriteSports()
 					],
-					"phone_number"=>[ "type"=>"number", "class"=>"form-control", "placeholder"=>"Phone number", "required"=>0, "msgerror"=>"phone_number", "value" => $this->getPhoneNumber()
+					"phone_number"=>[ "type"=>"number", "class"=>"form-control", "placeholder"=>"Numéro de téléphone", "required"=>0, "msgerror"=>"phone_number", "value" => $this->getPhoneNumber()
 					],
-					"country"=>[ "type"=>"string", "class"=>"form-control", "placeholder"=>"Your country", "required"=>1, "msgerror"=>"country", "value" => $this->getCountry()
+					"city"=>[ "type"=>"string", "class"=>"form-control", "placeholder"=>"Votre ville", "required"=>0, "msgerror"=>"city", "value" => $this->getCity()
 					],
-					"city"=>[ "type"=>"string", "class"=>"form-control", "placeholder"=>"Your city", "required"=>1, "msgerror"=>"city", "value" => $this->getCity()
-					],
-					"street"=>[ "type"=>"int", "class"=>"form-control", "placeholder"=>"Street number", "required"=>1, "msgerror"=>"street", "value" => $this->getStreet()
-					],
-					"zipcode"=>[ "type"=>"int", "class"=>"form-control", "placeholder"=>"Your zipcode", "required"=>1, "msgerror"=>"zipcode", "value" => $this->getZipcode()
-					],
-
 					"form-type" => ["type" => "hidden", "value" => "edit", "placeholder" => "", "required" => 0, "msgerror" => "hidden input", "class" => ""
 					],
 				]
@@ -456,11 +420,11 @@ class User extends basesql
 			];
 		} else if ($formType == "resetPassword") {
 			$form = [
-				"title" => "Reset password",
-				"buttonTxt" => "Confirm",
+				"title" => "Mot de passe perdu ?",
+				"buttonTxt" => "Récupérez mon mot de passe",
 				"options" => ["method" => "POST", "action" => WEBROOT . "user/resetPassword/", "enctype"=>"multipart/form-data"],
 				"struct"=>[
-					"reset-email"=>[ "type"=>"email", "class"=>"form-control", "placeholder"=>"Email address", "required"=>1, "msgerror"=>"email_exist"
+					"reset-email"=>[ "type"=>"email", "class"=>"form-control", "placeholder"=>"Adresse email", "required"=>1, "msgerror"=>"email_exist"
 					],
 					"form-type" => ["type" => "hidden", "value" => "reset-passord", "placeholder" => "", "required" => 0, "msgerror" => "hidden input", "class" => ""
 					]
@@ -479,5 +443,16 @@ class User extends basesql
 			$this->id
 		);
 		return $pivot->getData();
+	}
+
+	public function getEvents($idUser){
+		$events = Event::findAll();
+		$return = [];
+		foreach($events as $event){
+			if(in_array($idUser,$event->getUsersId())){
+				$return[]  = $event;
+			}
+		}
+		return $return;
 	}
 }

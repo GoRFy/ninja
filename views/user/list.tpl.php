@@ -3,13 +3,8 @@
     <script type="text/javascript"> var page = "user";</script>
 
     <div align="center">
-        <h3 class="center header-li ">Find a player :</h3>
+        <h3 class="center header-li ">Trouver un joueur :</h3>
         <input type="text" id="search-content">
-        <select id="select-criteria">
-            <option value="1" selected>By name</option>
-            <option value="2">By Country</option>
-            <option value="3">By City</option>
-        </select>
     </div>
     <div id="search-content-results""></div>
 
@@ -22,7 +17,7 @@
             echo '
                 <div class="col-sm-6">
                     <div class="panel panel-primary2">
-                        <div class="panel-heading"><h3 class="center header-li "><a href="'.WEBROOT.'user/show/'.$user->getId().'"> User '.$user->getUserName().'</a></h3></div>
+                        <div class="panel-heading"><h3 class="center header-li "><a href="'.WEBROOT.'user/show/'.$user->getId().'"> '.$user->getUserName().'</a></h3></div>
                         <div class="panel-body">
                             <ul class="header-ul">
                                 <li class="li-list">
@@ -30,16 +25,16 @@
                                     <span class="form-content">'.$user->getEmail().'</span>
                                 </li>
                                 <li class="li-list">
-                                    <span class="form-info">Country : </span>
-                                    <span class="form-content">'.$user->getCountry().'</span>
-                                </li>
-                                <li class="li-list">
-                                    <span class="form-info">City : </span>
+                                    <span class="form-info">Ville : </span>
                                     <span class="form-content">'.$user->getCity().'</span>
                                 </li>
                                 <li class="li-list">
-                                    <span class="form-info">Birthday : </span>
-                                    <span class="form-content">'.$user->getBirthday().'</span>
+                                    <span class="form-info">Age : </span>
+                                    ';
+                                    if($user->getBirthday() != "0000-00-00"){
+                                        echo '  <span class="form-content">'.User::getAge($user->getBirthday()).' ans</span>';
+                                    }
+                                    echo '
                                 </li>
                             </ul>
                         </div>
@@ -62,5 +57,3 @@ for($i=1; $i<=$nombreDePages; $i++){
 echo '</p>';
 ?>
 </div>
-
-

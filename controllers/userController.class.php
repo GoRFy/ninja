@@ -16,7 +16,7 @@ class userController
 			}
       $v = new View();
       $teams = TeamHasUser::findBy("idUser",$args[0],"int");
-			$events = Event::findAll();
+			$events = $user->getEvents($args[0]);
       $v->setView("user/show.tpl");
       $v->assign("user", $user);
       $v->assign("teams",$teams);
@@ -54,7 +54,7 @@ class userController
 						$path = "public/img/users/".trim(strtolower($_POST["username"])).".".strtolower(substr(strrchr($_FILES['avatar']['name'], '.'), 1));
 						$movingFile = move_uploaded_file($_FILES['avatar']['tmp_name'], $path);
 						if($movingFile){
-							$v->assign("success","Changes has been saved");
+							$v->assign("success","Changement pris en compte !");
 							$user->setAvatar($path);
 							//Suppression des anciennes images, si l'extension changeait ça en enregistrait deux, cordialement
 							if($dossier = opendir('public/img/users')){
@@ -66,7 +66,7 @@ class userController
 								}
 							}
 						}else{
-							$v->assign("movingFile", "<span class='info'> An error while seting your avatar </span>");
+							$v->assign("movingFile", "<span class='info'>Une erreur est survenue durant la mise en place de votre avatar ! </span>");
 						}
 					}
 
@@ -76,10 +76,6 @@ class userController
 					$user->setLastName(trim(($_POST["last_name"])));
 					$user->setPhoneNumber($_POST["phone_number"]);
 					$user->setCity($_POST['city']);
-					$user->setCountry($_POST['country']);
-					$user->setStreet($_POST['street']);
-					$user->setZipcode($_POST['zipcode']);
-
 					$user->save();
 				}
 			}
@@ -119,13 +115,14 @@ class userController
 						$user[0]->setPassword($_POST["password"]);
 						$user[0]->setIsActive(1);
 						$user[0]->save();
-						$view->assign("activate_msg", "<span class='info'> Your account is now activated </span>");
+						$view->assign("activate_msg", "<span class='info'> Compte activé ! Vous allez être redirigés ! </span>");
+						header('Refresh:3; url='.WEBROOT.'user/login');
 						session_destroy();
 					}
 				}
 			}
 			else {
-				$view->assign("activate_msg", "<span class='info'> Looks like your account had already been activated </span>");
+				header("location: ".WEBROOT.'user/login');
 			}
 		}
 		$view->assign("activateErrors",$activateErrors);
@@ -139,15 +136,12 @@ class userController
 		$view->setView("user/subscribe.tpl");
 
 		$subErrors = [];
-		$logErrors = [];
 
 		$user = new User();
 
 		$formSubscribe = $user->getForm("subscription");
 		$view->assign("formSubscribe", $formSubscribe);
 
-		$formLogin = $user->getForm("login");
-		$view->assign("formLogin", $formLogin);
 		$validator = new Validator();
 
 		if(isset($_POST["form-type"])) {
@@ -168,7 +162,6 @@ class userController
 			}
 		}
 		$view->assign("subErrors", $subErrors);
-		$view->assign("logErrors", $logErrors);
 	}
 
 	public function loginAction () {
@@ -178,13 +171,9 @@ class userController
 		$view = new View();
 		$view->setView("user/login.tpl");
 
-		$subErrors = [];
 		$logErrors = [];
-
-		$formSubscribe = User::getForm("subscription");
-		$view->assign("formSubscribe", $formSubscribe);
-
-		$formLogin = User::getForm("login");
+		$user = new User();
+		$formLogin = $user->getForm("login");
 		$view->assign("formLogin", $formLogin);
 
 		if(isset($_POST["form-type"])) {
@@ -207,8 +196,6 @@ class userController
 				$view->assign("error_message", "<span class='info'> Couldn't find you :( </span>");
 			}
 		}
-
-		$view->assign("subErrors", $subErrors);
 		$view->assign("logErrors", $logErrors);
 	}
 
@@ -223,7 +210,8 @@ class userController
 
 	public function resetPasswordAction($args) {
 		$view = new View();
-		$form = User::getForm("resetPassword");
+		$user = new User();
+		$form = $user->getForm("resetPassword");
 		$formErrors = [];
 
 		$view->assign("form", $form);
@@ -377,11 +365,9 @@ class userController
 	public function searchAction($args)
 	{
 		header('Content-Type: application/json');
-		$args = implode(",", $args);
-		$args = explode(",", $args);
 		$args1 = $args[0];
-		$args2 = $args[1];
-		$users = User::findByLikeArray($args1,$args2);
+		$columns = ["username","first_name","last_name","city","email","phone_number"];
+		$users = User::findByLikeArray($columns,$args1);
 
 		echo json_encode($users);
 	}

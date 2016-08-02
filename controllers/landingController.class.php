@@ -8,11 +8,12 @@ class landingController {
 
   public function legalsAction ($args) {
     $view = new View();
-    $view->setView("landing/legals.tpl", "empty");
+    $view->setView("landing/legals.tpl");
   }
 
   public function planAction ($args) {
     $view = new View();
-    $view->setView("landing/plan.tpl", "empty");
+    $view->setView("landing/plan.tpl");
   }
+
 }

@@ -19,10 +19,11 @@ div.panel panel-primary/success/warning...(optional)
     margin-bottom: 15px;
 }
 .panel .panel-media {
-    min-height: 80px;
+    min-height: 110px;
     background-position: center;
     background-size: cover;
 }
+
 .panel .panel-heading {
     padding: 5px;
     border-bottom: 1px solid #182115;

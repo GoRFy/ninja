@@ -13,13 +13,22 @@
 
     <header class="header">
       <div class="img-header">
+        <?php if (User::isConnected()): ?>
+          <a href="<?= WEBROOT; ?>index/index"><img alt="Sport Nation Logo" src="<?= WEBROOT ?>public/img/logo_SNWW_light.png"></a>
+        <?php else: ?>
         <img alt="Sport Nation Logo" src="<?= WEBROOT ?>public/img/logo_SNWW_light.png">
+        <?php endif; ?>
       </div>
       <div class="actions">
         <?php if (!User::isConnected()): ?>
           <p>
             <a href="<?= WEBROOT ?>user/login" type="button" class="btn btn-success">Se connecter</a>
             <a href="<?= WEBROOT ?>user/subscribe" type="button" class="btn btn-success">S'inscrire</a>
+          </p>
+        <?php else: ?>
+          <p>
+            <a href="<?= WEBROOT ?>index/index" type="button" class="btn btn-success">Accueil</a>
+            <a href="<?= WEBROOT ?>user/logout" type="button" class="btn btn-warning">Se déconnecter</a>
           </p>
         <?php endif; ?>
       </div>
@@ -41,7 +50,7 @@
       <div class="row">
         <div class="col-sm-8 col-sm-offset-2">
           <p>
-            Vous êtes sur le point de jouer mais il vous manque un joueur ? Sport Nation vous permet de faire savoir aux joueurs autour de vous qu'il vous reste une ou plusieurs place.
+            Vous êtes sur le point de jouer mais il vous manque un joueur ? Sport Nation vous permet de faire savoir aux joueurs autour de vous qu'il vous reste une ou plusieurs places.
           </p>
           <p>
             Deux clics et c'est parti !
@@ -123,12 +132,12 @@
     </div>
 
     <footer class="footer">
-      <ul>
-        <li><a href="<?= WEBROOT ?>landing/legals">Mentions légales</a></li>
-        <li><a href="<?= WEBROOT ?>landing/plan">Plan du site</a></li>
-      </ul>
       <div class="copyright">
         <p>
+          <div>
+          <a href="<?= WEBROOT ?>landing/legals">Mentions légales</a> -
+          <a href="<?= WEBROOT ?>landing/plan">Plan du site</a>
+        </div>
           Copyrigth Sports Nation© | All rights reserved
         </p>
       </div>

@@ -1,18 +1,22 @@
-<div class="row vertical-center">
+<div class="row vertical-center2">
   <div class="col-sm-12">
-    <div class="col-sm-4 col-sm-offset-2">
+    <div class="col-sm-5 col-sm-offset-2">
       <div class="panel panel-primary">
         <div class="panel-body">
           <div class="row">
             <div class="col-sm-12">
               <?php
-                  $this->createForm($formActivation, $activateErrors);
+                $this->createForm($formContact, $contactError);
               ?>
               </div>
           </div>
         </div>
         <div class="panel-footer">
-          <?php if(isset($this->data['activate_msg'])){echo $this->data["activate_msg"];} ?>
+
+          <?php //echo isset($this->data["error"]) ? $this->data["error"] : "" ?>
+
+          <?php //echo isset($this->data["success"]) ? $this->data["success"] : "" ?>
+
         </div>
       </div>
     </div>
@@ -21,8 +25,8 @@
         <div clas="panel-body">
           <div class="row">
             <div class="col-sm-12">
-              <h1>Comment ça se passe ?</h1>
-              <h3>Votre mot de passe doit faire en 8 et 12 caractères, au moins une minuscule et majuscule et un chiffre.</a>.</h3>
+              <h1>Vous voulez nous contacter ?</h1>
+              <h3>Faites le dans la joie et la bonne humeur, comme m'a dit un jour un grand homme, "c'est en aimant son prochain qu'on ken de la beurette" Killian Homaitre.</h3>
             </div>
           </div>
         </div>

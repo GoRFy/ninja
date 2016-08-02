@@ -16,7 +16,7 @@ class Team extends basesql
 		"dateCreated",
 		"sports",
 		"description",
-		"avatar"
+		"avatar",
 	];
 
 	public function __construct(){
@@ -87,35 +87,43 @@ class Team extends basesql
 		$form = [];
 		if ($formType == "create") {
 			$form = [
-				"title" => "Create your own team",
-				"buttonTxt" => "Create",
+				"title" => "Créer ton équipe",
+				"buttonTxt" => "Créer",
 				"options" => ["method" => "POST", "action" => WEBROOT . "team/create"],
 				"struct" => [
-					"teamName"=>[ "type"=>"text", "class"=>"form-control", "placeholder"=>"Team Name", "required"=>1, "msgerror"=>"teamName" ],
-					"description"=>[ "type"=>"text", "class"=>"form-control", "placeholder"=>"Description", "required"=>0, "msgerror"=>"description" ],
+					"teamName"=>[ "type"=>"text", "class"=>"form-control", "placeholder"=>"Nom d'équipe", "required"=>1, "msgerror"=>"teamName" ],
+					"description"=>[ "type"=>"textarea", "class"=>"form-control", "placeholder"=>"Description", "required"=>0, "msgerror"=>"description" ],
 					"form-type" => ["type" => "hidden", "value" => "createTeam", "placeholder" => "", "required" => 0, "msgerror" => "hidden input", "class" => ""]
 				]
 			];
 		}
 		else if ($formType == "edit") {
 			$form = [
-				"title" => "Team params",
-				"buttonTxt" => "Confirm",
+				"title" => "Paramètres d'équipes",
+				"buttonTxt" => "Confirmer",
 				"options" => ["method" => "POST", "action" => WEBROOT . "team/edit/" . $this->id,"enctype"=>"multipart/form-data"],
 				"struct"=>[
-					"teamName"=>[ "type"=>"text", "class"=>"form-control", "placeholder"=>"Team name", "required"=>1, "msgerror"=>"new_teamName", "value" => $this->getTeamName()],
+					"teamName"=>[ "type"=>"text", "class"=>"form-control", "placeholder"=>"Nom d'équipe", "required"=>1, "msgerror"=>"new_teamName", "value" => $this->getTeamName()],
 					"description"=>[ "type"=>"text", "class"=>"form-control", "placeholder"=>"Description", "required"=>0, "msgerror"=>"newDescription", "value" => $this->getDescription()],
-					"avatar"=>["type"=>"file","class"=>"form-control","placeholder"=>"Your avatar","required"=>0,"msgerror"=>"avatar","value"=>"../../".$this->getAvatar()],]
+					"avatar"=>["type"=>"file","class"=>"form-control","placeholder"=>"Votre avatar","required"=>0,"msgerror"=>"avatar","value"=>"../../".$this->getAvatar()],]
 			];
 		}
 		else if ($formType == "invite") {
 			$form = [
-				"title" => "Invite a new partner",
-				"buttonTxt" => "Invite",
+				"title" => "Inviter un nouveau partenaire",
+				"buttonTxt" => "Inviter",
 				"options" => ["method" => "POST", "action" => WEBROOT . "team/invite/".$this->id],
 				"struct"=>[
-					"emailOrUsername"=>[ "type"=>"text", "class"=>"form-control", "placeholder"=>"Email or username to invite", "required"=>1, "msgerror"=>"emailOrUsername"],
-					"message"=>["type"=>"text","class"=>"form-control","placeholder"=>"A message","required"=>0,"msgerror"=>"messageInvite"],]
+					"emailOrUsername"=>[ "type"=>"text", "class"=>"form-control", "placeholder"=>"Email ou pseudo à inviter", "required"=>1, "msgerror"=>"emailOrUsername"],
+					"message"=>["type"=>"text","class"=>"form-control","placeholder"=>"Un message","required"=>0,"msgerror"=>"messageInvite"],]
+					];
+		}else if($formType = "askToJoin"){
+			$form = [
+				"title" => "Demander à rejoindre",
+				"buttonTxt" => "Demander",
+				"options" => ["method" => "POST","class"=>"askToJoinForm" ,"action" => WEBROOT . "team/askToJoin/".$this->id],
+				"struct"=>[
+					"message"=>["type"=>"text","class"=>"form-control","placeholder"=>"Votre message","required"=>0,"id"=>"message","msgerror"=>"messageInvite"],]
 					];
 		}
 

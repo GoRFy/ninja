@@ -72,9 +72,6 @@ class adminController
                 $view->assign('nombreDePagesUser',$nombreDePagesUser);
                 $view->assign("users", $retour_messagesUser);
 
-                $signaledComment = Comment::findBy("signalment",1,"int");
-                $view->assign('signaledComment',$signaledComment);
-
             }else{
                 header("Location:".WEBROOT);
             }

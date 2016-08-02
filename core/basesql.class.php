@@ -207,11 +207,20 @@ class basesql extends PDO
 		}
 	}
 
-	public static function findByLikeArray($column,$search,$fetch=false) {
+	public static function findByLikeArray($columns,$search,$fetch=false) {
 		$instance = new static;
 		$sql = "SELECT * FROM ".$instance->table;
-		$sql = $sql." WHERE ".$column." LIKE '%".$search."%';";
+		$first = true;
+		foreach ($columns as $column){
+			if($first == true){
+				$sql = $sql ." WHERE ".$column." LIKE '%".$search."%'";
+				$first = false;
+			}else{
+				$sql = $sql ." OR ".$column." LIKE '%".$search."%'";
+			}
+		}
 		$query =  $instance->pdo->prepare($sql);
+
 		$query->execute();
 		if($fetch == true){
 			$item = $query->fetch(PDO::FETCH_ASSOC);

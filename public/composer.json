@@ -1,0 +1,10 @@
+{
+    "name": "r.lambot/public",
+    "authors": [
+        {
+            "name": "Lambot Romain",
+            "email": "lambot.rom@gmail.com"
+        }
+    ],
+    "require": {}
+}
