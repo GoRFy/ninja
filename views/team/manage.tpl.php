@@ -122,8 +122,8 @@ if(!$team->getId() == ""){
                 $date = date("d/m/y H:i",strtotime($dateCreation));
 
                 $userInvited = User::FindById($invitedOne->getIdUserInvited());
-                echo "<div style='text-align:center'>".$date." - " .$userInvited->getUsername().'&nbsp;<a href="#" data-url="team/join" data-team='.$invitedOne->getIdTeamInviting().' data-type='.$invitedOne->getType().' data-user='.$userInvited->getId().' class="ajax-link btn btn-success"><span class="fa fa-check">&nbsp;</span></a>&nbsp;
-                <a href="#" class="ajax-link btn btn-danger" data-url="team/cancelInvitation" data-team='.$invitedOne->getIdTeamInviting().' data-user='.$userInvited->getId().' data-type='.$invitedOne->getType().'><span class="fa fa-remove" >&nbsp;</span></a><br>'.$invitedOne->getMessage().'</div>';
+                echo "<div style='text-align:center'>".$date." - " .$userInvited->getUsername().'&nbsp;<i href="#" data-url="team/join" data-team='.$invitedOne->getIdTeamInviting().' data-type='.$invitedOne->getType().' data-user='.$userInvited->getId().' class="ajax-link btn-success fa fa-check" style="cursor:pointer;border:none;font-size:1em;padding:5px;border-radius:4px"></i>&nbsp;
+                <i href="#" class="ajax-link btn-danger fa fa-remove" data-url="team/cancelInvitation" data-team='.$invitedOne->getIdTeamInviting().' data-user='.$userInvited->getId().' data-type='.$invitedOne->getType().' style="border:none;font-size:1em;padding:5px;border-radius:4px;cursor:pointer"></i></a><br>'.$invitedOne->getMessage().'</div>';
                 echo '<BR>'; // SWAG TU AIMES BIEN RENAUD ? :(
               }
 
