@@ -168,6 +168,11 @@ $(function ($) {
       	$('#fade').remove();  //...ils disparaissent ensemble
         //$("html").append($('<style>html:after{ content:""; position:"";left:"";right:"";top:"";bottom:"";background:"";}</style>'));
       }
+      var container = $("#confirmPopup");
+        container.fadeOut();
+      	$('#fade').remove();  //...ils disparaissent ensemble
+        //$("html").append($('<style>html:after{ content:""; position:"";left:"";right:"";top:"";bottom:"";background:"";}</style>'));
+      
   });
 
   $(".ajax-form, .ajax-link").on("click submit", function (ev) {
@@ -176,6 +181,7 @@ $(function ($) {
           return;
       }
       ev.preventDefault();
+      var lock = true;
       var action = $(this).attr("action");
       var method = $(this).attr("method");
       var success = $(this).data("success");
@@ -195,7 +201,6 @@ $(function ($) {
 
           action = $(this).data("url");
           action = window.location.origin+"/"+window.location.pathname.split("/",2)[1]+"/"+action;
-
       } else {
           $.each($(this).find("input, select, textarea"), function () {
               if ($(this).attr("type") == "checkbox" || $(this).attr("type") == "radio") {
@@ -207,26 +212,66 @@ $(function ($) {
               }
           });
       }
+      if($(this).is(".confirm")) {//confirmPopup
+        var lock = false;
+        $('#confirmPopup').fadeIn();
 
-      if (!$.isEmptyObject(data)) {
-            $.ajax({
-                method: method,
-                url: action,
-                data: data
-            }).success(function (data) {
-                showMessage(data.message, "success");
-                triggerCallback(data);
-              // J'aimerais bien rajouter un petit refresh de window ici.
-          }).fail(function (jqXHR, textStatus) {
-              var errors = (JSON.parse(jqXHR.responseText));
-              var errorText = "";
-              if (errors.errorText.length > 0) {
-                  errorText = errors.errorText;
-              } else {
-                  errorText = "Request failed :(";
-              }
-              showMessage(errorText, "danger");
-          });
+        //Effet fade-in du fond opaque
+        $('body').append('<div id="fade"></div>'); //Ajout du fond opaque noir
+        //Apparition du fond - .css({'filter' : 'alpha(opacity=80)'}) pour corriger les bogues de IE
+        $('#fade').css({'filter' : 'alpha(opacity=80)'}).fadeIn();
+        $('#validate').click(function(){
+          if (!$.isEmptyObject(data)) {
+            var container = $("#confirmPopup");
+              container.fadeOut();
+              $('#fade').remove();
+                $.ajax({
+                    method: method,
+                    url: action,
+                    data: data
+                }).success(function (data) {
+                    showMessage(data.message, "success");
+                    triggerCallback(data);
+                  // J'aimerais bien rajouter un petit refresh de window ici.
+              }).fail(function (jqXHR, textStatus) {
+                  var errors = (JSON.parse(jqXHR.responseText));
+                  var errorText = "";
+                  if (errors.errorText.length > 0) {
+                      errorText = errors.errorText;
+                  } else {
+                      errorText = "Request failed :(";
+                  }
+                  showMessage(errorText, "danger");
+              });
+          }
+        });
+        $('#cancel').click(function(){
+          var container = $("#confirmPopup");
+            container.fadeOut();
+            $('#fade').remove();
+        });
+      }else{
+        if (!$.isEmptyObject(data) && lock == true) {
+          console.log("gfdgfd");
+              $.ajax({
+                  method: method,
+                  url: action,
+                  data: data
+              }).success(function (data) {
+                  showMessage(data.message, "success");
+                  triggerCallback(data);
+                // J'aimerais bien rajouter un petit refresh de window ici.
+            }).fail(function (jqXHR, textStatus) {
+                var errors = (JSON.parse(jqXHR.responseText));
+                var errorText = "";
+                if (errors.errorText.length > 0) {
+                    errorText = errors.errorText;
+                } else {
+                    errorText = "Request failed :(";
+                }
+                showMessage(errorText, "danger");
+            });
+        }
       }
     });
 });

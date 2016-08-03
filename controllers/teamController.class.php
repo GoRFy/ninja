@@ -318,7 +318,8 @@ class teamController
 					$user->delete();
 				}
 
-				Helpers::getMessageAjaxForm("Le joueur a bien été exclu !");
+				$helpers = new Helpers();
+				$helpers->getMessageAjaxForm("Le joueur a bien été exclu !");
              $team = Team::findById($args["idTeam"]);
              $nameTeam = $team->getTeamName();
              Notification::createNotification($id_user=$args['idUser'],$message="You've got kicked out of the group ".$nameTeam." !",$action=WEBROOT."team/show/".$args["idTeam"]);
