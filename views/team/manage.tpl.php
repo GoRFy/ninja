@@ -57,19 +57,26 @@ if(!$team->getId() == ""){
       <div class="panel-body">
         <?php if(count($invitationsTo) > 0) : ?>
           <?php
+          $i=0;
           foreach($invitationsTo as $invitedOne){
+            echo '<div class="invitationsTo">';
             $dateCreation =  $invitedOne->getDateInvited();
             $mois = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
             $date = date("d ",strtotime($dateCreation)). $mois[(date("n ",strtotime($dateCreation))- 1)]. date(" Y à H:i",strtotime($dateCreation));
 
             $userInvited = User::FindById($invitedOne->getIdUserInvited());
-            ?>
-            Vous avez invité <b><a href="<?= WEBROOT?>user/show/<?= $userInvited->getId()?>"><?= $userInvited->getUsername(); ?></a></b>le <?=$date;?> - <a href="#" data-url="team/cancelInvitation" data-team=<?= $invitedOne->getIdTeamInviting()?> data-user=<?= $userInvited->getId()?> class="ajax-link btn btn-danger"><span class="fa fa-remove"></span></a>
-            <?php
-            echo '<BR>'; // SWAG TU AIMES BIEN RENAUD ? :(
-          }
 
+            echo "<div style='text-align:center;font-size:14px;inline-block;line-height:25px'>Vous avez invité &nbsp; <a href=".WEBROOT."user/show".$userInvited->getId()."><b>" .$userInvited->getUsername()."</b></a>&nbsp; le ".$date.'
+            &nbsp;<i href="#" class="icon-fixed-width ajax-link btn-danger fa fa-remove fa-fw icons-primary" data-url="team/cancelInvitation" data-team='.$invitedOne->getIdTeamInviting().' data-user='.$userInvited->getId().' data-type='.$invitedOne->getType().' aria-hidden="true"></i></div>';
+            if($i%3 == 0 ||$i%3 == 1  ){
+              echo '<HR style="width:50%">'; // SWAG TU AIMES BIEN RENAUD ? :(
+            }
+            $i++;
+            echo '</div>';
+          }
           ?>
+        <div id="pagination">
+        </div>
         <?php else: ?>
           <h4 class="center">Aucune pour le moment</h4>
         <?php endif; ?>
@@ -149,15 +156,15 @@ if(!$team->getId() == ""){
 </div>
 </div>
 </div>
-<div class="row " id="confirmPopup" class="popup_block">
+<div class="row modalPopup" id="confirmPopup" class="popup_block">
   <div class="col-sm-12">
     <div class="panel panel-primary">
       <div class="panel-body">
         <form id="confirmPopupForm">
-          <h1 style="color: black">Êtes-vous sûr ?</h1>
-          <div class="input-grp">
-            <input type="button" name="action" id="validate" value="Mais bien suuuuuh !" class=" btn btn-success" />
-            <input type="button" name="action" id="cancel" value="Euh non !" class="btn btn-danger" />
+          <div style="font-size:30px;color: black;padding-bottom:20px">Êtes-vous sûr ?</div>
+          <div class="text-right">
+            <input type="button" name="action" id="validate" value="Oui" class=" btn btn-success" />&nbsp;&nbsp;
+            <input type="button" name="action" id="cancel" value="Non" class="btn btn-danger" />
           </div>
         </form>
       </div>
@@ -166,3 +173,8 @@ if(!$team->getId() == ""){
 </div>
 </div>
   <?php endif;?>
+  <script>
+$(document).ready(function() {
+  pagination(3,".invitationsTo","#pagination",1);
+});
+</script>

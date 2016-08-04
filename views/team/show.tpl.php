@@ -20,7 +20,7 @@ $team = $this->data["team"];
           <ul >
             <li class="li-list">
               <span class="form-info">Description : </span>
-              <span class="form-content"><?php echo $team->getDescription(); ?></span>
+              <span class="form-content"> &nbsp;<?php echo $team->getDescription(); ?> </span>
             </li>
             <li class="li-list">
               <span class="form-info">Date de création : </span>
@@ -29,11 +29,11 @@ $team = $this->data["team"];
               $mois = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
               $date = date("d ",strtotime($dateCreation)). $mois[(date("n ",strtotime($dateCreation))- 1)]. date(" Y à H:i",strtotime($dateCreation));
               ?>
-              <span class="form-content"><?php echo $date; ?></span>
+              <span class="form-content"> &nbsp;<?php echo $date; ?> </span>
             </li>
             <li class="li-list">
               <span class="form-info">Sports : </span>
-              <span class="form-content"><?php echo $team->getSports(); ?></span>
+              <span class="form-content"> &nbsp;<?php echo $team->getSports(); ?> </span>
             </li>
           </ul>
           <?php if(Team::imIn($team->getId())): ?>
@@ -139,7 +139,7 @@ $team = $this->data["team"];
 </div>
 </div>
 </div>
-<div class="row" id="askToJoinHidden" class="popup_block">
+<div class="row modalPopup" id="askToJoinHidden" class="popup_block">
   <div class="col-sm-12">
     <div class="panel panel-primary">
       <div class="panel-body">
@@ -147,6 +147,9 @@ $team = $this->data["team"];
         $this->createForm($formAskToJoin,[]);
         /*<a href="#" class="btn btn-primary ajax-link prompt" data-team="<?= $idTeam; ?>" data-url="team/askToJoin"*/
         ?>
+        <div style="position:absolute;bottom:26%;font-size:14px;left:14%">
+           <i style="color:#6C6599" class="nbLetters"></i>
+        </div>
       </div>
     </div>
   </div>

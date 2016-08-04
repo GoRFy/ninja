@@ -256,7 +256,8 @@ class teamController
                 $nameTeam =$team->getTeamName();
                 Notification::createNotification($id_user=$args["idUser"],$message="You've got demoted of your captain function in the group ".$nameTeam." !",$action=WEBROOT."team/show/".$args["idTeam"]);
 		    }
-				Helpers::getMessageAjaxForm("Joueur rétrogradé !");
+				$helpers = new Helpers();
+				$helpers->getMessageAjaxForm("Joueur rétrogradé !");
 		 }else{
 		 	//A voir la redirection
 		 	header('Location:'.WEBROOT.'user/login');
@@ -294,7 +295,8 @@ class teamController
 				Notification::createNotification($id_user=$args["idUser"],$message="You've got promoted to captain of the group ".$nameTeam." !",$action=WEBROOT."team/show/".$args["idTeam"]);
 		    	$userToPromote[0]->save();
 		    }
-				Helpers::getMessageAjaxForm("Joueur promu !");
+				$helpers = new Helpers();
+					$helpers->getMessageAjaxForm("Joueur promu !");
 		 }else{
 		 	//A voir la redirection
 		 	header('Location:'.WEBROOT.'user/login');
@@ -353,8 +355,8 @@ class teamController
 		    	$team = Team::findBy("id",$args["idTeam"],"int");
 					$team[0]->delete();
 		    }
-
-				Helpers::getMessageAjaxForm("Équipe quittée !");
+				$helpers = new Helpers();
+				$helpers->getMessageAjaxForm("Équipe quittée !",true);
 		 }else{
 		 	//A voir la redirection
 		 	header('Location:'.WEBROOT.'user/login');
@@ -385,8 +387,8 @@ class teamController
 					$team->delete();
 				}
 
-
-			Helpers::getMessageAjaxForm("Équipe supprimée !");
+				$helpers = new Helpers();
+				$helpers->getMessageAjaxForm("Équipe supprimée !");
 		 }else{
 		 	//A voir la redirection
 		 	header('Location:'.WEBROOT.'user/login');
@@ -424,8 +426,8 @@ class teamController
 			$user = User::findById($args["idUser"]);
 			$userName = $user->getUsername();
 			Notification::createNotification($id_user=$captain,$message="The member ".$userName." has just join the group ".$nameTeam." !",$action=$action=WEBROOT."team/show/".$args["idTeam"]);
-
-			Helpers::getMessageAjaxForm("Invitation acceptée !");
+			$helpers = new Helpers();
+			$helpers->getMessageAjaxForm("Invitation acceptée !");
 		}else{
 		 	//A voir la redirection
 			header('Location:'.WEBROOT.'user/login');
@@ -466,8 +468,8 @@ class teamController
 				$invitation->delete();
 			}
 
-
-			Helpers::getMessageAjaxForm("Invitation refusée !");
+			$helpers = new Helpers();
+			$helpers->getMessageAjaxForm("Invitation refusée !");
 		}else{
 		 	//A voir la redirection
 			header('Location:'.WEBROOT.'user/login');

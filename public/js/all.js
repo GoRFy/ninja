@@ -1,3 +1,86 @@
+function pagination(nbParPage,divSelect,divPager,model)
+{
+    //Initialisation
+    var nbElem = $(divSelect).length;
+    var nbPage = Math.ceil(nbElem / nbParPage);
+    var pageLoad = 1;
+
+    $(divSelect).each(function(index) {
+        if (index < nbParPage)
+            $(divSelect).eq(index).show();
+        else
+            $(divSelect).eq(index).hide();
+    });
+
+    //Reset & vérification
+    function reset() {
+        if (nbPage < 2) $(divPager).hide();
+        if (pageLoad == nbPage) $(divPager + ' span.suivant').hide(); else $(divPager + ' span.suivant').show();
+        if (pageLoad == 1) $(divPager + ' span.precedent').hide(); else $(divPager + ' span.precedent').show();
+        $(divPager + ' ul li').removeClass('selected');
+        $(divPager + ' ul li').eq(pageLoad -1).addClass('selected');
+    }
+
+    //Pagination génération
+    if (model != 1) {
+        $(divPager).html('<ul></ul>');
+        for(i = 1; i <= nbPage; i++) $(divPager + ' ul').append('<li>' + i + '</li>');
+
+        //Changement click page
+        $(divPager + ' ul li').click(function() {
+            if ($(this).index() + 1 != pageLoad) {
+                pageLoad = $(this).index() + 1;
+                $(divSelect).hide();
+
+                $(divSelect).each(function(i) {
+                    if (i >= ((pageLoad * nbParPage) - nbParPage) && i < (pageLoad * nbParPage)) $(this).show();
+                });
+
+                reset();
+            }
+        });
+    }
+
+    //Suivant Précédent
+    if (model == 1) {
+        $(divPager).prepend('<span class="precedent">Precedent</span>');
+        $(divPager).append('<span class="suivant">Suivant></span>');
+    } else if (model == 3) {
+        $(divPager + ' ul').before('<span class="precedent">Precedent</span>');
+        $(divPager + ' ul').after('<span class="suivant">Suivant</span>');
+    }
+
+    //Evènement click sur suivant
+    $(divPager + ' span.suivant').click(function() {
+        if (pageLoad < nbPage) {
+            pageLoad += 1;
+            $(divSelect).hide();
+
+            $(divSelect).each(function(i) {
+                if (i >= ((pageLoad * nbParPage) - nbParPage) && i < (pageLoad * nbParPage)) $(this).fadeIn();
+            });
+
+            reset();
+        }
+    });
+
+    //Evènement click sur précédent
+    $(divPager + ' span.precedent').click(function() {
+        if (pageLoad -1 >= 1) {
+            pageLoad -= 1;
+            $(divSelect).hide();
+
+            $(divSelect).each(function(i) {
+                if (i >= ((pageLoad * nbParPage) - nbParPage) && i < (pageLoad * nbParPage)) $(this).fadeIn();
+            });
+
+            reset();
+        }
+    });
+
+    reset();
+}
+
 // Show or hide main menu
 $(document).on("click", function (e) {
     e.stopPropagation();
@@ -141,6 +224,37 @@ $(function ($) {
       })
 
   })
+  var nbLetters = 50;
+  $('.nbLetters').prepend(nbLetters );
+  $.fn.extend({
+    limit_characters: function(max, counter){
+        $(this).bind("keydown focus", function(){
+            var self = this;
+            window.setTimeout(function(){
+                var chars = self.value.length;
+                if(chars > max) {
+                    self.value = self.value.substr(0, max);
+                    chars = max;
+                    $('#message').css('border',"2px solid red");
+                }else{
+                  $('#message').css('border',"1px solid #8E8D8F");
+                }
+                if(typeof(counter) != 'undefined') counter.html(max-chars);
+            }, 5);
+        });
+    }
+});
+
+  /*$('#message').keypress(function(){
+          console.log("g");
+      if((nbLetters - $('#message').val().length -1) <0){
+        return false;
+      }
+      $('.nbLetters').empty();
+      $('.nbLetters').prepend((nbLetters - $('#message').val().length -1)+" caractères restants");
+  })*/
+  var elem = $('.nbLetters');
+  $('#message').limit_characters(50,elem);
 
   $("#askToJoin").click(function(e){
     $('#askToJoinHidden').fadeIn();
@@ -162,17 +276,12 @@ $(function ($) {
 
 
   $(document).mouseup(function(e){
-      var container = $("#askToJoinHidden");
+      var container = $(".modalPopup");
       if(!container.is(e.target) && container.has(e.target).length === 0){
         container.fadeOut();
       	$('#fade').remove();  //...ils disparaissent ensemble
         //$("html").append($('<style>html:after{ content:""; position:"";left:"";right:"";top:"";bottom:"";background:"";}</style>'));
       }
-      var container = $("#confirmPopup");
-        container.fadeOut();
-      	$('#fade').remove();  //...ils disparaissent ensemble
-        //$("html").append($('<style>html:after{ content:""; position:"";left:"";right:"";top:"";bottom:"";background:"";}</style>'));
-      
   });
 
   $(".ajax-form, .ajax-link").on("click submit", function (ev) {
@@ -252,13 +361,16 @@ $(function ($) {
         });
       }else{
         if (!$.isEmptyObject(data) && lock == true) {
-          console.log("gfdgfd");
               $.ajax({
                   method: method,
                   url: action,
                   data: data
               }).success(function (data) {
-                  showMessage(data.message, "success");
+                  if(data.refresh == true){
+                    showMessage(data.message, "success",true);
+                  }else{
+                    showMessage(data.message, "success",false);
+                  }
                   triggerCallback(data);
                 // J'aimerais bien rajouter un petit refresh de window ici.
             }).fail(function (jqXHR, textStatus) {
@@ -280,15 +392,20 @@ $(function ($) {
     -- Message box --
 ****************************/
 
-function showMessage(msg, code) {
+function showMessage(msg, code,refresh = false) {
     $box = $(".msg-box");
     $box.find(".text .text-content").html(msg);
     $box.addClass(code);
     $box.fadeIn();
-    setTimeout(function () {
-        $box.fadeOut();
-        window.location.reload(false);
-    }, 2000);
+    if(refresh == true){
+      setTimeout(function () {
+          $box.fadeOut();
+      }, 2000);
+    }else{
+      setTimeout(function () {
+          $box.fadeOut();
+      }, 5000);
+    }
 }
 
 /***************************
