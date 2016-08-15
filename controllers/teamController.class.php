@@ -467,7 +467,7 @@ class teamController
 			foreach($invitations as $invitation){
 				$invitation->delete();
 			}
-
+			
 			$helpers = new Helpers();
 			$helpers->getMessageAjaxForm("Invitation refusée !");
 		}else{

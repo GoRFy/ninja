@@ -307,7 +307,7 @@ $(function ($) {
           data.idTeam = $(this).data("team");
           data.type = $(this).data("type");
           data.comment = $(this).data("comment");
-
+      $(this).parents("div.invitationsTo").remove();
           action = $(this).data("url");
           action = window.location.origin+"/"+window.location.pathname.split("/",2)[1]+"/"+action;
       } else {
@@ -392,20 +392,15 @@ $(function ($) {
     -- Message box --
 ****************************/
 
-function showMessage(msg, code,refresh = false) {
+function showMessage(msg, code) {
     $box = $(".msg-box");
     $box.find(".text .text-content").html(msg);
     $box.addClass(code);
     $box.fadeIn();
-    if(refresh == true){
-      setTimeout(function () {
-          $box.fadeOut();
-      }, 2000);
-    }else{
-      setTimeout(function () {
-          $box.fadeOut();
-      }, 5000);
-    }
+    setTimeout(function () {
+        $box.fadeOut();
+    }, 5000);
+
 }
 
 /***************************

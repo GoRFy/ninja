@@ -68,9 +68,6 @@ if(!$team->getId() == ""){
 
             echo "<div style='text-align:center;font-size:14px;inline-block;line-height:25px'>Vous avez invité &nbsp; <a href=".WEBROOT."user/show".$userInvited->getId()."><b>" .$userInvited->getUsername()."</b></a>&nbsp; le ".$date.'
             &nbsp;<i href="#" class="icon-fixed-width ajax-link btn-danger fa fa-remove fa-fw icons-primary" data-url="team/cancelInvitation" data-team='.$invitedOne->getIdTeamInviting().' data-user='.$userInvited->getId().' data-type='.$invitedOne->getType().' aria-hidden="true"></i></div>';
-            if($i%3 == 0 ||$i%3 == 1  ){
-              echo '<HR style="width:50%">'; // SWAG TU AIMES BIEN RENAUD ? :(
-            }
             $i++;
             echo '</div>';
           }
