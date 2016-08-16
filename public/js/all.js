@@ -1,10 +1,10 @@
 function pagination(nbParPage,divSelect,divPager,model)
 {
+    $('#pagination').empty();
     //Initialisation
     var nbElem = $(divSelect).length;
     var nbPage = Math.ceil(nbElem / nbParPage);
     var pageLoad = 1;
-
     $(divSelect).each(function(index) {
         if (index < nbParPage)
             $(divSelect).eq(index).show();
@@ -202,6 +202,11 @@ $(function ($) {
     $('.allUsers').css('display','none');
   })
 
+
+    if($('#cancelShow').find('span')){
+        $('#cancelShow').hide();
+    }
+
   $(".askToJoinForm").submit(function(e){
     e.preventDefault();
 
@@ -219,6 +224,17 @@ $(function ($) {
           var container = $("#askToJoinHidden");
           container.fadeOut();
         	$('#fade').remove();
+            if($('#cancelShow').find('span')){
+                $('#cancelShow').find('span').remove()
+                $('#cancelShow').show();
+                $('#askingShow').hide();
+            }else{
+                console.log('fdssdf');
+                $('#cancelShow').hide();
+                $('#askingShow').show();
+            }
+
+
           showMessage("Invitation envoyée", "success");
         }
       })
@@ -276,7 +292,7 @@ $(function ($) {
 
 
   $(document).mouseup(function(e){
-      var container = $(".modalPopup");
+      var container = $("#askToJoinHidden");
       if(!container.is(e.target) && container.has(e.target).length === 0){
         container.fadeOut();
       	$('#fade').remove();  //...ils disparaissent ensemble
@@ -307,9 +323,16 @@ $(function ($) {
           data.idTeam = $(this).data("team");
           data.type = $(this).data("type");
           data.comment = $(this).data("comment");
-      $(this).parents("div.invitationsTo").remove();
-          action = $(this).data("url");
-          action = window.location.origin+"/"+window.location.pathname.split("/",2)[1]+"/"+action;
+
+          $(this).parents("div.invitationsTo").remove();
+          $(document).ready(function() {
+              pagination(3,".invitationsTo","#pagination",1);
+          });
+          if($(this).is(".confirm")) {var tempAction = $(this).data("url")}else{
+              action = $(this).data("url");
+              action = window.location.origin+"/"+window.location.pathname.split("/",2)[1]+"/"+action;
+          }
+
       } else {
           $.each($(this).find("input, select, textarea"), function () {
               if ($(this).attr("type") == "checkbox" || $(this).attr("type") == "radio") {
@@ -331,6 +354,8 @@ $(function ($) {
         $('#fade').css({'filter' : 'alpha(opacity=80)'}).fadeIn();
         $('#validate').click(function(){
           if (!$.isEmptyObject(data)) {
+              action = tempAction;
+              action = window.location.origin+"/"+window.location.pathname.split("/",2)[1]+"/"+action;
             var container = $("#confirmPopup");
               container.fadeOut();
               $('#fade').remove();
@@ -356,6 +381,7 @@ $(function ($) {
         });
         $('#cancel').click(function(){
           var container = $("#confirmPopup");
+            tempAction = '';
             container.fadeOut();
             $('#fade').remove();
         });
