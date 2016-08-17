@@ -239,6 +239,42 @@ ul {
     font-size: 18px;
 }
 
+.sportDisplayed{
+    cursor:pointer;
+}
+
+.autocomplete__results {
+    position: relative;
+}
+.autocomplete__list {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+    border: 1px solid silver;
+    background: white;
+}
+.autocomplete__list__item {
+    border-bottom: 1px solid silver;
+    background: white;
+    cursor: pointer;
+}
+.autocomplete__list__item:last-child {
+    border-bottom: 0px;
+}
+.autocomplete__list__item--disabled {
+    color: gray;
+    cursor: default
+}
+.autocomplete__list__item--highlighted {
+    background: whitesmoke;
+}
+.autocomplete__list__item__search-term {
+    background-color: yellow;
+}
+
 /***********************
     -- APP-CONTENT --
 ***********************/

@@ -183,6 +183,36 @@ $(function ($) {
 });
 
 
+/*********************
+    AUTO COMPLETION
+ *********************/
+
+$(function ($) {
+
+    $("#searchSportInput").keyup(function(){
+        var search = $('#searchSportInput').val();
+        var width=  $('#searchSportInput').width();
+
+        $('#autocomplete__results').empty();
+        if (search.length > 1) {
+            $.getJSON(webrootJs+"sport/getSports/"+search, function(sports) {
+                    for (var sport in sports) {
+                        $('#autocomplete__results').append("<div class='sportDisplayed'>"+sports[sport].name+"</div>");
+                        $('.sportDisplayed').width(width);
+                    }
+                    $(".sportDisplayed").click(function(){
+                        $("#searchSportInput").val( $(this).text());
+                        $('#autocomplete__results').empty();
+                    });
+            });
+        }
+
+    });
+
+
+});
+
+
 /**********************
     -- AJAX FORMS --
 **********************/
@@ -607,7 +637,6 @@ $(function ($) {
     });
     $("#search-content").keyup(function(){
         var search = $('#search-content').val();
-        console.log("t");
         if (search != "") {
             $("#all-content").hide();
             $("#pages").hide();
