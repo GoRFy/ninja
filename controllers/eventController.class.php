@@ -318,4 +318,18 @@ class eventController {
             header("location:" . WEBROOT);
         }
     }
+
+    public function likeAction($args){
+        if (User::isConnected()) {
+            if (!empty($args[0])) {
+
+            } else {
+
+            }
+            $view = new View();
+            $view->setView("event/like.tpl");
+        } else {
+            header("location:" . WEBROOT);
+        }
+    }
 }

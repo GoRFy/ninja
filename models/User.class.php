@@ -15,10 +15,13 @@ class User extends basesql
 	protected $phone_number = 0;
 	protected $favorite_sports = "";
 	protected $city = "";
+    protected $country = "";
+    protected $street = "";
+    protected $zipcode = 0;
 	protected $birthday= "0000-00-00";
 	protected $avatar = "";
 	protected $dateCreated;
-	protected $is_admin;
+	protected $is_admin = 0;
 	protected $discussionPivotTable = "discussions_users_pivot";
 
 	protected $link;
@@ -35,8 +38,12 @@ class User extends basesql
 		"avatar",
 		"favorite_sports",
 		"city",
+        "country",
+        "street",
+        "zipcode",
 		"birthday",
-		"dateCreated"
+		"dateCreated",
+        "is_admin"
 	];
 	/**
 	* @param array
@@ -85,6 +92,18 @@ class User extends basesql
 	public function getCity(){
 		return $this->city;
 	}
+
+    public function getCountry(){
+        return $this->country;
+    }
+
+    public function getStreet(){
+        return $this->street;
+    }
+
+    public function getZipcode(){
+        return $this->zipcode;
+    }
 
 	public function getBirthday(){
 		return $this->birthday;
@@ -138,7 +157,19 @@ class User extends basesql
 		$this->city = htmlspecialchars($city);
 	}
 
-	public function setBirthday($birthday){
+    public function setCountry($country){
+        $this->country = htmlspecialchars($country);
+    }
+
+    public function setStreet($street){
+        $this->street = htmlspecialchars($street);
+    }
+
+    public function setZipcode($zipcode){
+        $this->zipcode = htmlspecialchars($zipcode);
+    }
+
+    public function setBirthday($birthday){
 		$this->birthday = htmlspecialchars($birthday);
 	}
 

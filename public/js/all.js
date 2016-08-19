@@ -209,6 +209,7 @@ $(function ($) {
 
     });
 
+    $
 
 });
 
@@ -232,11 +233,6 @@ $(function ($) {
     $('.allUsers').css('display','none');
   })
 
-
-    if($('#cancelShow').find('span')){
-        $('#cancelShow').hide();
-    }
-
   $(".askToJoinForm").submit(function(e){
     e.preventDefault();
 
@@ -254,18 +250,14 @@ $(function ($) {
           var container = $("#askToJoinHidden");
           container.fadeOut();
         	$('#fade').remove();
-            if($('#cancelShow').find('span')){
-                $('#cancelShow').find('span').remove()
-                $('#cancelShow').show();
+            if ($('#askingOrCancel').find(".actif").attr('id') != "cancelShow"){
                 $('#askingShow').hide();
-            }else{
-                console.log('fdssdf');
-                $('#cancelShow').hide();
-                $('#askingShow').show();
+                $('#askingShow').attr("class","text-right inactif");
+                $('#cancelShow').attr("class","text-right actif");
+                $('#cancelShow').show();
+                showMessage("Invitation envoyée", "success");
             }
 
-
-          showMessage("Invitation envoyée", "success");
         }
       })
 
@@ -374,6 +366,13 @@ $(function ($) {
               }
           });
       }
+      if ($('#askingOrCancel').find(".actif").attr('id') == "cancelShow") {
+          $('#cancelShow').hide();
+          $('#cancelShow').attr("class", "text-right inactif");
+          $('#askingShow').attr("class", "text-right actif");
+          $('#askingShow').show();
+      }
+
       if($(this).is(".confirm")) {//confirmPopup
         var lock = false;
         $('#confirmPopup').fadeIn();

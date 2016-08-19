@@ -154,11 +154,13 @@ class userController
 				$now = date("Y-m-d H:i:s");
 				$user->setDateCreated($now);
 				$user->save();
+                $_SESSION['username'] = $_POST['username'];
 				if($user->sendEmail("subscribe")) {
-					$view->assign( "mailerMessage", "<span class='info'> An email has just been sent to ".$user->getEmail() . "</span>" );
+					$view->assign( "mailerMessage", "<span class='info'> Email envoyé à ".$user->getEmail() . "</span>." );
 				} else {
-					$view->assign( "mailerMessage", "<span class='info'> Something went wrong when trying to send email. </span>" );
+					$view->assign( "mailerMessage", "<span class='info'> Une erreur est survenue, veuillez nous contacter</span>." );
 				}
+				unset($_SESSION['username']);
 			}
 		}
 		$view->assign("subErrors", $subErrors);

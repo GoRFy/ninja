@@ -92,7 +92,7 @@ if(!$team->getId() == ""){
         foreach($members as $member){
           $user = User::findById($member->getIdUser());
           $actualUserAdmin = Captain::findBy(["idUser","idTeam"],[$user->getId(),$team->getId()],["int","int"]);
-          echo '<p style="font-size:14px;">'.$user->getUsername()." - " . Captain::getTitre($actualUserAdmin[0]->getCaptain());
+          echo '<p class="members" style="font-size:14px;">'.$user->getUsername()." - " . Captain::getTitre($actualUserAdmin[0]->getCaptain());
           if(!($user->getId() == $_SESSION["user_id"])){ ?>
             <?php if($captain[0]->getCaptain() >= 2 ): ?>
               <?php if($actualUserAdmin[0]->getCaptain() != 2 && $actualUserAdmin[0]->getCaptain() >= 0 ): ?>

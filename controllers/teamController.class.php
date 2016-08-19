@@ -420,12 +420,11 @@ class teamController
 				$invitation->delete();
 			}
 
-
 			$team = Team::findById($args["idTeam"]);
 			$nameTeam = $team->getTeamName();
-			$user = User::findById($args["idUser"]);
+			$user = User::findById($idUser);
 			$userName = $user->getUsername();
-			Notification::createNotification($id_user=$captain,$message="The member ".$userName." has just join the group ".$nameTeam." !",$action=$action=WEBROOT."team/show/".$args["idTeam"]);
+			Notification::createNotification($id_user=$idUser,$message="The member ".$userName." has just join the group ".$nameTeam." !",$action=$action=WEBROOT."team/show/".$args["idTeam"]);
 			$helpers = new Helpers();
 			$helpers->getMessageAjaxForm("Invitation acceptée !");
 		}else{
@@ -436,7 +435,6 @@ class teamController
 
 	public function askToJoinAction($args){
 		if(User::isConnected()){
-			var_dump($args);
 			$invitation = new Invitation();
 			if(!Invitation::findBy(["idUserInvited","idTeamInviting","type"],[$_SESSION['user_id'],$args['idTeam'],1],['int',"int","int"])){
 				$now = date("Y-m-d H:i:s");
@@ -467,7 +465,7 @@ class teamController
 			foreach($invitations as $invitation){
 				$invitation->delete();
 			}
-			
+
 			$helpers = new Helpers();
 			$helpers->getMessageAjaxForm("Invitation refusée !");
 		}else{

@@ -48,15 +48,23 @@ $team = $this->data["team"];
                 <a href="#" class="btn btn-danger ajax-link" data-team="<?= $idTeam; ?>" data-url="team/cancelInvitation">Rejeter invitation</a>
               </div>
             <?php else: ?>
+            <div id="askingOrCancel">
               <?php if($invitation): ?>
-                <div class="text-right">
+                <div class="text-right actif" id="cancelShow">
                   <a href="#" class="btn btn-success ajax-link" data-team="<?= $idTeam; ?>" data-url="team/cancelInvitation">Annuler demande</a>
                 </div>
+                <div class="text-right inactif" id="askingShow" style="display:none">
+                    <a href="#" id="askToJoin" class="btn btn-success poplight" rel="askToJoinHidden">Demander à rejoindre</a>
+                </div>
               <?php else: ?>
-                <div class="text-right">
-                  <a href="#" id="askToJoin" class="btn btn-primary poplight" rel="askToJoinHidden">Demander à rejoindre</a>
+                <div class="text-right inactif" id="cancelShow" style="display:none">
+                  <a href="#" class="btn btn-success ajax-link" data-team="<?= $idTeam; ?>" data-url="team/cancelInvitation">Annuler demande</a>
+                </div>
+                <div class="text-right actif" id="askingShow">
+                  <a href="#" id="askToJoin" class="btn btn-success poplight" rel="askToJoinHidden">Demander à rejoindre</a>
                 </div>
               <?php endif; ?>
+        </div>
             <?php endif; ?>
           <?php endif; ?>
         </div>

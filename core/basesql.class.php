@@ -14,6 +14,7 @@ class basesql extends PDO
 		}catch(Exception $e){
 			die("Erreur SQL:".$e->getMessage());
 		}
+        $this->pdo->query("SET NAMES UTF8");
 
 		//$this->table = get_called_class();
 		$all_vars = get_object_vars($this);
@@ -276,6 +277,7 @@ class basesql extends PDO
 	.$column;
 
 	$sql = $sql." LIKE '%".$value."%';";
+        $sql = $sql ." COLLATE utf8_general_ci";
 
 	$query = $instance->pdo->prepare($sql);
 	$query->execute();
