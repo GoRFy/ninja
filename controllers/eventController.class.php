@@ -17,7 +17,8 @@ class eventController {
 
     public function createAction($arg) {
         if (User::isConnected()) {
-            $form = Event::getForm("createEvent");
+            $event = new Event();
+            $form = $event->getForm("createEvent");
             $view = new View();
             $formErrors = [];
             if (!empty($_POST)) {
@@ -132,10 +133,10 @@ class eventController {
                     $view->setView("event/update.tpl");
                 } else {
                     http_response_code(404);
-                    Echo "Event not found.";
+                    Echo "Évènement introuvable";
                 }
             } else {
-                throw new Exception("You must be owner of the event.", 403);
+                throw new Exception("Vous devez être le créateur de l'évènement.", 403);
             }
         } else {
             header("location:" . WEBROOT);
@@ -157,7 +158,7 @@ class eventController {
             header("location:" . WEBROOT . "event/list");
         } else {
             http_response_code(404);
-            Echo "Event not found.";
+            Echo "Évènement introuvable";
         }
     }
 
@@ -170,61 +171,58 @@ class eventController {
             header("location:" . WEBROOT . "event/list");
         } else {
             http_response_code(404);
-            echo "Event not found";
+            echo "Évènement introuvable";
         }
     }
 
-    public function commentAction($args){
-      if(User::isConnected() && !empty($args[0])){
-        $event = Event::findById($args[0]);
-        $view = new View();
-        $commentForm = $event->getForm("comment");
-        $commentErrors = [];
-        $comments = EventHasComment::FindBy("id_event",$args[0],"int");
-        $total = count($comments);//Nombre de team
-        $messagesParPage=10; //Nombre de messages par page
-        $nombreDePages=ceil($total/$messagesParPage);
+    public function joinTeamAction($args) {
+        if (isset($args[0])) {
+            $event = Event::findById(intval($args[0]));
+            $user = User::findById($_SESSION['user_id']);
 
-        if(isset($_GET['page'])){
-             $pageActuelle=intval($_GET['page']);
-             if($pageActuelle>$nombreDePages)
-             {
-                  $pageActuelle=$nombreDePages;
-             }
-        }else{
-             $pageActuelle=1;
+            $view = new View();
+            $view->assign("user",$user);
+            $view->setView("event/joinTeam.tpl");
+            $view->assign("event",$event);
+            if(isset($_SESSION['joinTeamFailed'])){
+              $view->assign("error","Vous avez invités trop de membres !");
+              unset($_SESSION['joinTeamFailed']);
+            }
+            /*$event->addUser(intval($_SESSION["user_id"]));
+            $idOwner = $event->getOwner();
+            Notification::createNotification($idOwner,$message="Someone just joined your event, check it out !",$action=WEBROOT."event/update/".$args[0]);*/
+            //header("location:" . WEBROOT . "event/list");
+        } else {
+            http_response_code(404);
+            echo "Évènement introuvable";
         }
-        $premiereEntree=($pageActuelle-1)*$messagesParPage;
-        // La requête sql pour récupérer les messages de la page actuelle.
-        $retour_messages= Comment::findAll([$premiereEntree,$messagesParPage],'id');
-        if(!empty($_POST)) {
-  				$validator = new Validator();
-  				$commentErrors = $validator->check($commentForm["struct"], $_POST);
-  				if(count($commentErrors) == 0) {
-            $comment = new Comment;
-            $now = date("Y-m-d H:i:s");
-            $comment->setDateCreated($now);
-            $comment->setComment($_POST['comment']);
-            $comment->setIdAuthor($_SESSION['user_id']);
-            $comment->save();
-
-            $eventHasComment = new EventHasComment;
-            $eventHasComment->setIdEvent($args[0]);
-            $eventHasComment->setIdComment($comment->getId());
-            $eventHasComment->save();
-          }
-        }
-
-        $view->assign("commentForm",$commentForm);
-        $view->assign("commentErrors",$commentErrors);
-        $view->setView("event/comment.tpl");
-        $view->assign("comments",$retour_messages);
-        $view->assign("event", $event);
-      }else{
-        //A voir la redirection
-        header('Location:'.WEBROOT.'user/login');
-      }
     }
+
+    public function joinTeamSuccessAction($args) {
+        if (isset($args[0])) {
+            $event = Event::findById(intval($args[0]));
+            $place = $event->getPlaceRestante();
+            if (count($_POST['participant'.$args[1]]) > $place){
+              $_SESSION['joinTeamFailed'] = 1;
+              header("location:" . WEBROOT . "event/joinTeam/".$args[0]);
+            }else{
+              foreach($_POST['participant'.$args[1]] as $participant){
+                $event->addUser(intval($participant));
+                $idOwner = $event->getOwner();
+                Notification::createNotification($idOwner,$message="Un utilisateur vient de rejoindre votre évènement !",$action=WEBROOT."event/update/".$args[0]);
+              }
+            }
+            header("location:" . WEBROOT . "event/list");
+            /*$event->addUser(intval($_SESSION["user_id"]));
+            $idOwner = $event->getOwner();
+            Notification::createNotification($idOwner,$message="Someone just joined your event, check it out !",$action=WEBROOT."event/update/".$args[0]);*/
+            //header("location:" . WEBROOT . "event/list");
+        } else {
+            http_response_code(404);
+            echo "Évènement introuvable";
+        }
+    }
+
 
     public function leaveAction($args) {
         if (isset($args[0]) && isset($args[1])) {
@@ -239,7 +237,7 @@ class eventController {
             }
         } else {
             http_response_code(404);
-            echo "User or event not found";
+            echo "Évènement ou utilisateur introuvable";
         }
     }
 

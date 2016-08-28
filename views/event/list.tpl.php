@@ -36,11 +36,20 @@
                               </div>
                           </div>
                           <ul class="item-list">
-                              <li>Du <?= $event->getFromDate(); ?>
-                               - au <?= $event->getToDate(); ?></li>
-                              <li>Inscription ouverte jusqu'au <?= $event->getJoignableUntil(); ?></li>
+                            <?php
+                            $dateFrom = $event->getFromDate();
+                            $dateTo = $event->getToDate();
+                            $dateUntil = $event->getJoignableUntil();
+                            $mois = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+                            $dateFrom = date("d ",strtotime($dateFrom)). $mois[(date("n ",strtotime($dateFrom))- 1)]. date(" Y à H:i",strtotime($dateFrom));
+                            $dateTo = date("d ",strtotime($dateTo)). $mois[(date("n ",strtotime($dateTo))- 1)]. date(" Y à H:i",strtotime($dateTo));
+                            $dateUntil = date("d ",strtotime($dateUntil)). $mois[(date("n ",strtotime($dateUntil))- 1)]. date(" Y à H:i",strtotime($dateUntil));
+                             ?>
+                              <li>Du <?= $dateFrom; ?>
+                                au <?= $dateTo; ?></li>
+                              <li>Inscription ouverte jusqu'au <?= $dateUntil; ?></li>
                           </ul>
-                          <p>Membres : </p>
+                          <p>Participants (<?= $event->getPlaceRestante(); ?> places restantes) :  </p>
                           <ul class="item-list">
                               <?php foreach ($event->gatherUsers() as $key => $user): ?>
                                   <li><?= $user["username"] ?></li>
@@ -49,15 +58,20 @@
                       </div>
                       <div class="panel-footer">
                           <?php if (in_array($_SESSION["user_id"], $event->getUsersId()) && $event->getOwner() != $_SESSION["user_id"]): ?>
-                              <a href="<?= WEBROOT; ?>event/leave/<?= $event->getId();?>/<?= $_SESSION['user_id']?>" class="btn btn-danger">Leave</a>
+                              <a href="<?= WEBROOT; ?>event/leave/<?= $event->getId();?>/<?= $_SESSION['user_id']?>" class="btn btn-danger">Quitter</a>
+                              <a href="<?= WEBROOT;?>event/show/<?= $event->getId() ?>" class="btn btn-primary pull-right" style="margin-top:-5px">Détails</a>
                           <?php elseif (!in_array($_SESSION["user_id"], $event->getUsersId())): ?>
-                              <a href="<?= WEBROOT; ?>event/join/<?= $event->getId();?>" class="btn btn-success">Join</a>
+                            <?php if($event->getPlaceRestante() >0 ): ?>
+                              <a href="<?= WEBROOT; ?>event/join/<?= $event->getId();?>" class="btn btn-success">Rejoindre</a>
+                              <a href="<?= WEBROOT; ?>event/joinTeam/<?= $event->getId();?>" class="btn btn-success">Inscrire son équipe</a>
+                              <a href="<?= WEBROOT;?>event/show/<?= $event->getId() ?>" class="btn btn-primary pull-right" style="margin-top:-5px">Détails</a>
+                            <?php else: ?>
+                              <a href="<?= WEBROOT;?>event/show/<?= $event->getId() ?>" class="btn btn-primary pull-right" style="margin-top:-20px">Détails</a>
+                            <?php endif; ?>
                           <?php endif; ?>
                           <?php if ($event->getOwner() == $_SESSION["user_id"]): ?>
-                              <a href="<?= WEBROOT; ?>event/update/<?= $event->getId() ?>" class="btn btn-primary">Manage</a>
+                              <a href="<?= WEBROOT; ?>event/update/<?= $event->getId() ?>" class="btn btn-primary">Gérer</a>
                           <?php endif; ?>
-
-                          <a href="<?= WEBROOT;?>event/show/<?= $event->getId() ?>" class="btn btn-primary pull-right">Details</a>
                       </div>
                   </div>
                 </div>

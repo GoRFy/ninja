@@ -83,6 +83,15 @@ class Team extends basesql
 		}
 	}
 
+	public function getMembers(){
+		$TeamHasUser = TeamHasUser::Findby('idTeam',$this->id,'int');
+		$allUsers = [];
+		foreach($TeamHasUser as $user){
+			$allUsers[] = $user->getIdUser();
+		}
+		return $allUsers;
+	}
+
 	public function getForm($formType){
 		$form = [];
 		if ($formType == "create") {

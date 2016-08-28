@@ -95,14 +95,6 @@ if(!$team->getId() == ""){
           echo '<p class="members" style="font-size:14px;">'.$user->getUsername()." - " . Captain::getTitre($actualUserAdmin[0]->getCaptain());
           if(!($user->getId() == $_SESSION["user_id"])){ ?>
             <?php if($captain[0]->getCaptain() >= 2 ): ?>
-              <?php if($actualUserAdmin[0]->getCaptain() != 2 && $actualUserAdmin[0]->getCaptain() >= 0 ): ?>
-                <i href="#" data-url="team/promote" data-team="<?= $team->getId()?>" data-user="<?= $user->getId()?>" aria-hidden="true" class="icons-primary2 ajax-link btn-success fa fa-arrow-up fa-lg confirm" ></i>&nbsp;
-                <!-- <a href="#" data-url="team/promote" data-team="<?= $team->getId()?>" data-user="<?= $user->getId()?>" class="ajax-link" > - Promouvoir</a>-->
-              <?php endif; ?>
-              <?php if(($actualUserAdmin[0]->getCaptain() != 2 && $actualUserAdmin[0]->getCaptain() > 0) || $myself[0]->getCaptain() == 3): ?>
-                <i href="#" data-url="team/demote" data-team="<?= $team->getId()?>" data-user="<?= $user->getId()?>" aria-hidden="true" class="icons-primary2 ajax-link btn-warning fa fa-arrow-down fa-lg confirm" ></i>&nbsp;
-                <!-- <a href="#" data-url="team/demote" data-team="<?= $team->getId()?>" data-user="<?= $user->getId()?>" class="ajax-link"> - Rétrograder</a> -->
-              <?php endif; ?>
               <?php if($actualUserAdmin[0]->getCaptain() != 2  || $myself[0]->getCaptain() == 3): ?>
                 <i href="#" data-url="team/kick" data-team="<?= $team->getId()?>" data-user="<?= $user->getId()?>" aria-hidden="true" class="icons-primary2 ajax-link btn-danger fa fa-remove fa-lg confirm" ></i>&nbsp;
                 <!-- <a href="#" data-url="team/kick" data-team="<?= $team->getId()?>" data-user="<?= $user->getId()?>" class="ajax-link" > - Exclure</a> -->

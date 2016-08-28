@@ -92,6 +92,49 @@ $(document).on("click", function (e) {
     }
 });
 
+/*****
+HOVER
+*****/
+$(function ($){
+  $('.hoverWelcome').hover(function(){
+    $("#hoverWelcome").show("medium");
+  },function(){
+      $("#hoverWelcome").hide("medium");
+  });
+});
+
+$(function ($){
+  $('.hoverUsers').hover(function(){
+    $("#hoverUsers").show("medium");
+  },function(){
+      $("#hoverUsers").hide("medium");
+  });
+});
+
+$(function ($){
+  $('.hoverTeams').hover(function(){
+    $("#hoverTeams").show("medium");
+  },function(){
+      $("#hoverTeams").hide("medium");
+  });
+});
+
+$(function ($){
+  $('.hoverEvents').hover(function(){
+    $("#hoverEvents").show("medium");
+  },function(){
+      $("#hoverEvents").hide("medium");
+  });
+});
+
+$(function ($){
+  $('.hoverContact').hover(function(){
+    $("#hoverContact").show("medium");
+  },function(){
+      $("#hoverContact").hide("medium");
+  });
+});
+
 /**************************
     -- DOCUMENT EVENTS --
 **************************/
@@ -634,9 +677,9 @@ $(function ($) {
             $hintBox = $(document.createElement("div"));
             $hintBox.addClass("hintBox");
             if ($(ev.target).hasClass("js-time")) {
-                $hintBox.append("Please respect the following format => hh:mm");
+                $hintBox.append("Veuillez respecter le format suivant => hh:mm");
             } else if ($(ev.target).hasClass("js-date")) {
-                $hintBox.append("Please respect the following format => dd/mm/yyyy");
+                $hintBox.append("Veuillez respecter le format suivant => dd/mm/yyyy");
             }
             $inputGrp.append($hintBox);
         }

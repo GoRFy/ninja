@@ -269,6 +269,16 @@
           $this->country = $country;
         }
 
+        public function getNbPeople(){
+          $nbPeopleMax = $this->getNbPeopleMax();
+          //$event->gatherUsers();
+          return count($this->gatherUsers());
+        }
+
+        public function getPlaceRestante(){
+          return $this->getNbPeopleMax() - $this->getNbPeople();
+        }
+
         /**
          * Return occurences of the relation
          * @return array of User
@@ -373,58 +383,44 @@
 
             if ($formType == "createEvent") {
                 $form = [
-    				"title" => "Create an event",
-    				"buttonTxt" => "Create",
+    				"title" => "Créer votre évènement",
+    				"buttonTxt" => "Créer",
     				"options" => ["method" => "POST", "action" => WEBROOT . "event/create", "class" => "", "data-attributes" => []],
     				"struct" => [
-    					"name"=>[ "type"=>"text", "class"=>"form-control", "placeholder"=>"Event Name", "required"=>1, "msgerror"=>"" ],
-                        "description"=>[ "type"=>"textarea", "class"=>"form-control", "placeholder"=>"Event description", "required"=>0, "msgerror"=>"" ],
-    					"from_date" => ["type" => "text", "placeholder" => "From date", "required" => 1, "msgerror" => "date_format", "class" => "form-control js-time-input js-date"],
-                        "from_time" => ["type" => "text", "placeholder" => "From Time", "required" => 1, "msgerror" => "time_format", "class" => "form-control js-time-input js-time"],
-                        "to_date"=>[ "type"=>"text", "class"=>"form-control js-time-input js-date", "placeholder"=>"To date", "required"=>1, "msgerror"=>"date_format" ],
-                        "to_time" => ["type" => "text", "placeholder" => "To Time", "required" => 1, "msgerror" => "time_format", "class" => "form-control js-time-input js-time"],
-                        "joignable_until" => ["type" => "text", "placeholder" => "Joignable until", "required" => 1, "msgerror" => "date_format", "class" => "form-control js-time-input js-date"],
-                        "joignable_until_time" => ["type" => "text", "placeholder" => "Joignable until time", "required" => 1, "msgerror" => "time_format", "class" => "form-control js-time-input js-time"],
-                        "location" => ["type" => "text", "placeholder" => "Location", "required" => 1, "msgerror" => "", "class" => "form-control"],
-                        "nb_people_max" => ["type" => "number", "placeholder" => "Max number of people", "required" => 1, "msgerror" => "", "class" => "form-control"],
+    					"name"=>[ "type"=>"text", "class"=>"form-control", "placeholder"=>"Nom", "required"=>1, "msgerror"=>"" ],
+                        "description"=>[ "type"=>"textarea", "class"=>"form-control", "placeholder"=>"Description", "required"=>0, "msgerror"=>"" ],
+    					"from_date" => ["type" => "text", "placeholder" => "Du (jour)", "required" => 1, "msgerror" => "date_format", "class" => "form-control js-time-input js-date"],
+                        "from_time" => ["type" => "text", "placeholder" => "à (heure)", "required" => 1, "msgerror" => "time_format", "class" => "form-control js-time-input js-time"],
+                        "to_date"=>[ "type"=>"text", "class"=>"form-control js-time-input js-date", "placeholder"=>"Jusqu'au (jour)", "required"=>1, "msgerror"=>"date_format" ],
+                        "to_time" => ["type" => "text", "placeholder" => "à (heure)", "required" => 1, "msgerror" => "time_format", "class" => "form-control js-time-input js-time"],
+                        "joignable_until" => ["type" => "text", "placeholder" => "Inscription ouverte du (jour)", "required" => 1, "msgerror" => "date_format", "class" => "form-control js-time-input js-date"],
+                        "joignable_until_time" => ["type" => "text", "placeholder" => "à (heure)", "required" => 1, "msgerror" => "time_format", "class" => "form-control js-time-input js-time"],
+                        "location" => ["type" => "text", "placeholder" => "Emplacement", "required" => 1, "msgerror" => "", "class" => "form-control"],
+                        "nb_people_max" => ["type" => "number", "placeholder" => "Nombre maximum de participants", "required" => 1, "msgerror" => "", "class" => "form-control"],
                         "tags" => ["type" => "text", "placeholder" => "Tags", "required" => 1, "msgerror" => "", "class" => "form-control"],
     				]
     			];
             } else if ($formType == "updateEvent") {
                 $form = [
-    				"title" => "Update an event",
-    				"buttonTxt" => "Update",
+    				"title" => "Modifier votre évènement",
+    				"buttonTxt" => "Modifier",
                     "deletable" => $this->getId(),
     				"options" => ["method" => "POST", "action" => WEBROOT . "event/update/" . $this->getId(), "class" => "", "data-attributes" => []],
     				"struct" => [
-    					"name"=>[ "type"=>"text", "class"=>"form-control", "placeholder"=>"Event Name", "required"=>1, "msgerror"=>"", "value" => $this->getName()],
-                        "description"=>[ "type"=>"textarea", "class"=>"form-control", "placeholder"=>"Event description", "required"=>0, "msgerror"=>"", "value" => $this->getDescription() ],
-    					"from_date" => ["type" => "text", "placeholder" => "From date", "required" => 1, "msgerror" => "date_format", "class" => "form-control js-time-input js-date", "value" => $this->getFormatedDateTime("date", $this->getFromDate())],
-                        "from_time" => ["type" => "text", "placeholder" => "From Time", "required" => 1, "msgerror" => "time_format", "class" => "form-control js-time-input js-time", "value" => $this->getFormatedDateTime("time", $this->getFromDate())],
-                        "to_date"=>[ "type"=>"text", "class"=>"form-control js-time-input js-date", "placeholder"=>"To date", "required"=>1, "msgerror"=>"date_format", "value" => $this->getFormatedDateTime("date", $this->getToDate())],
-                        "to_time" => ["type" => "text", "placeholder" => "To Time", "required" => 1, "msgerror" => "time_format", "class" => "form-control js-time-input js-time", "value" => $this->getFormatedDateTime("time", $this->getToDate())],
-                        "joignable_until" => ["type" => "text", "placeholder" => "Joignable until", "required" => 1, "msgerror" => "date_format", "class" => "form-control js-time-input js-date", "value" => $this->getFormatedDateTime("date", $this->getJoignableUntil())],
-                        "joignable_until_time" => ["type" => "text", "placeholder" => "Joignable until time", "required" => 1, "msgerror" => "time_format", "class" => "form-control js-time-input js-time", "value" => $this->getFormatedDateTime("time", $this->getJoignableUntil())],
-                        "location" => ["type" => "text", "placeholder" => "Location", "required" => 1, "msgerror" => "", "class" => "form-control", "value" => $this->getLocation()],
-                        "nb_people_max" => ["type" => "number", "placeholder" => "Max number of people", "required" => 1, "msgerror" => "", "class" => "form-control", "value" => $this->getNbPeopleMax()],
+    					"name"=>[ "type"=>"text", "class"=>"form-control", "placeholder"=>"Nom", "required"=>1, "msgerror"=>"", "value" => $this->getName()],
+                        "description"=>[ "type"=>"textarea", "class"=>"form-control", "placeholder"=>"Description", "required"=>0, "msgerror"=>"", "value" => $this->getDescription() ],
+    					"from_date" => ["type" => "text", "placeholder" => "Du (jour)", "required" => 1, "msgerror" => "date_format", "class" => "form-control js-time-input js-date", "value" => $this->getFormatedDateTime("date", $this->getFromDate())],
+                        "from_time" => ["type" => "text", "placeholder" => "à (heure)", "required" => 1, "msgerror" => "time_format", "class" => "form-control js-time-input js-time", "value" => $this->getFormatedDateTime("time", $this->getFromDate())],
+                        "to_date"=>[ "type"=>"text", "class"=>"form-control js-time-input js-date", "placeholder"=>"Jusqu'au (jour)", "required"=>1, "msgerror"=>"date_format", "value" => $this->getFormatedDateTime("date", $this->getToDate())],
+                        "to_time" => ["type" => "text", "placeholder" => "à (heure)", "required" => 1, "msgerror" => "time_format", "class" => "form-control js-time-input js-time", "value" => $this->getFormatedDateTime("time", $this->getToDate())],
+                        "joignable_until" => ["type" => "text", "placeholder" => "Inscription ouverte du (jour)", "required" => 1, "msgerror" => "date_format", "class" => "form-control js-time-input js-date", "value" => $this->getFormatedDateTime("date", $this->getJoignableUntil())],
+                        "joignable_until_time" => ["type" => "text", "placeholder" => "à (heure)", "required" => 1, "msgerror" => "time_format", "class" => "form-control js-time-input js-time", "value" => $this->getFormatedDateTime("time", $this->getJoignableUntil())],
+                        "location" => ["type" => "text", "placeholder" => "Emplacement", "required" => 1, "msgerror" => "", "class" => "form-control", "value" => $this->getLocation()],
+                        "nb_people_max" => ["type" => "number", "placeholder" => "Nombre maximum de participants", "required" => 1, "msgerror" => "", "class" => "form-control", "value" => $this->getNbPeopleMax()],
                         "tags" => ["type" => "text", "placeholder" => "Tags", "required" => 1, "msgerror" => "", "class" => "form-control", "value" => $this->getTags()],
     				]
     			];
             }
-
-              else if ($formType == "comment") {
-              			$form = [
-              				"title" => "Let a comment !",
-              				"buttonTxt" => "Comment",
-              				"options" => ["method" => "POST", "action" => WEBROOT . "event/comment/". $this->id],
-              				"struct" => [
-              					"comment"=>[ "type"=>"text", "class"=>"form-control", "placeholder"=>"Your comment", "required"=>1, "msgerror"=>"comment"
-              					],
-              					"form-type" => ["type" => "hidden", "value" => "subscription", "placeholder" => "", "required" => 0, "msgerror" => "hidden input", "class" => ""
-              					]
-              				]
-              			];
-              		}
 
 
 

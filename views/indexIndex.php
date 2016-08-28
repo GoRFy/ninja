@@ -1,8 +1,8 @@
 <div class="row">
   <div class="col-sm-12">
-    <div class="col-sm-4 col-sm-offset-4">
-        <div class="panel panel-success">
-            <div class="panel-heading"><h2 class="center li-header">FAMOUS</h2></div>
+    <div class="col-sm-4 col-sm-offset-1">
+        <div class="panel panel-primary">
+            <div class="panel-heading"><h2 class="center li-header">&Eacute;vènement promu</h2></div>
             <div class="panel-body">
                 <?php
                 if($eventFamous == null){
@@ -14,6 +14,14 @@
                     }
                 }
                 ?>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4 col-sm-offset-1">
+        <div class="panel panel-success">
+            <div class="panel-heading"><h2 class="center li-header">&Eacute;vènement à proximité</h2></div>
+            <div class="panel-body">
+
             </div>
         </div>
     </div>

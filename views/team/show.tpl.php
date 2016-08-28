@@ -139,7 +139,7 @@ $team = $this->data["team"];
       <div class="panel panel-primary">
         <div class="panel-heading"><div class="center li-header" style="font-size:18px">Prochains events</div></div>
         <div class="panel-body">
-          oucou
+          
         </div>
       </div>
     </div>

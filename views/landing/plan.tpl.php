@@ -1,34 +1,35 @@
 
 <div class="row">
     <div class="col-sm-6">
-        <h1>Site plan</h1>
+        <h1>Plan du site</h1>
         <a href="<?= WEBROOT ?>landing/welcome">Back</a>
 
         <h2>Landing Page</h2>
         <ul>
-            <li>Legals mentions</li>
-            <li>Site plan</li>
+            <li>Mentions légales</li>
+            <li>Plan du site</li>
         </ul>
-        <h2>Connexion page</h2>
-        <h2>Home page</h2>
-        <h3>Users</h3>
+        <h2>Connection </h2>
+        <h2>Page d'accueil</h2>
+        <h3>Utilisateurs</h3>
         <ul>
-            <li>Profile user</li>
-            <li>Profile user edit</li>
-            <li>List of users</li>
+            <li>Profil</li>
+            <li>Edition</li>
+            <li>Annuaire d'utilisateurs</li>
         </ul>
-        <h3>Groups</h3>
+        <h3>&Eacute;quipes</h3>
         <ul>
-            <li>Group details</li>
-            <li>Group edit</li>
-            <li>List of groups</li>
+            <li>Profil</li>
+            <li>Edition</li>
+            <li>Annuaire d'équipes</li>
         </ul>
-        <h3>Events</h3>
+        <h3>&Eacute;vènements</h3>
         <ul>
-            <li>List of events</li>
-            <li>Event edit</li>
-            <li>Events comments</li>
+            <li>Annuaire d'évènements</li>
+            <li>Edition</li>
         </ul>
+        <h3>Formulaire de contact</h3>
+
     </div>
 </div>
 </div>

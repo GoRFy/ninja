@@ -251,6 +251,15 @@ class User extends basesql
 		}
 	}
 
+  public function getTeams(){
+    $TeamHasUser =TeamHasUser::findBy("idUser",$this->id,'int');
+    $allTeam = [];
+    foreach($TeamHasUser as $team){
+      $allTeam[] = $team->getIdTeam();
+    }
+    return $allTeam;
+  }
+
 
 	/**
 	* Send confirmation email using users's email

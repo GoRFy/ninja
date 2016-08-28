@@ -26,7 +26,7 @@
           <div class="row">
             <div class="col-sm-12">
               <h1>Vous voulez nous contacter ?</h1>
-              <h3>Faites le dans la joie et la bonne humeur, comme m'a dit un jour un grand homme, "c'est en aimant son prochain qu'on ken de la beurette" Killian Homaitre.</h3>
+              <h3>Si jamais vous rencontrez un problème ou vous voulez nous faire part de vos suggestions, n'hésitez pas!</h3>
             </div>
           </div>
         </div>

@@ -29,8 +29,8 @@
               <?php if(User::isAdmin()):  ?>
                   <li><a href="<?= WEBROOT;?>admin/global">Admin</a></li>
               <?php endif; ?>
-              <li><a href="<?= WEBROOT;?>landing/legals">Legals</a></li>
-              <li><a href="<?= WEBROOT; ?>landing/plan">Site plan</a></li>
+              <li><a href="<?= WEBROOT;?>landing/legals">Mentions légales</a></li>
+              <li><a href="<?= WEBROOT; ?>landing/plan">Plan du site</a></li>
               <?php if(User::isConnected()):  ?>
                   <li><a href="<?= WEBROOT;?>user/logout">Se déconnecter</a></li>
               <?php endif; ?>
@@ -60,6 +60,8 @@
                $informationHeader = "Evenement";
              }else if($_SESSION['controller'] == "contact"){
                $informationHeader = "Contact";
+             }else{
+               $informationHeader ="";
              }
            ?>
              <span ><?= $informationHeader; ?></span>
@@ -86,21 +88,27 @@
           <div class="sidebar">
             <div class="items-up items">
               <a href="<?= WEBROOT; ?>landing/welcome" class="item">
-                <span class="fa fa-question-circle-o"></span>
+                <span class="fa fa-question-circle-o hoverWelcome"></span>
               </a>
               <a href="<?= WEBROOT; ?>user/list/" class="item">
-                <span class="fa fa-book"></span>
+                <span class="fa fa-book hoverUsers" ></span>
               </a>
               <a href="<?= WEBROOT; ?>team/list" class="item">
-                <span class="fa fa-users"></span>
+                <span class="fa fa-users hoverTeams"></span>
               </a>
               <a href="<?= WEBROOT; ?>event/list" class="item">
-                <span class="fa fa-calendar-check-o"></span>
+                <span class="fa fa-calendar-check-o hoverEvents"></span>
               </a>
               <a href="<?= WEBROOT; ?>contact/create" class="item">
-                <span class="fa fa-at"></span>
+                <span class="fa fa-at hoverContact"></span>
               </a>
             </div>
+            <p id="hoverWelcome" style="display:none;position:absolute;left:50px;top:1px;width:90px;font-size:14px;padding-left:10px;padding-top:5px;background-color:#6C6599;height:45px;color:white">Que faisons-nous ?</p>
+            <p id="hoverUsers" style="display:none;position:absolute;left:50px;top:66px;width:90px;font-size:14px;padding-left:10px;padding-top:5px;background-color:#6C6599;height:45px;color:white">Annuaire d'utilisateurs</p>
+            <p id="hoverTeams" style="display:none;position:absolute;left:50px;top:131px;width:90px;font-size:14px;padding-left:10px;padding-top:5px;background-color:#6C6599;height:45px;color:white">Annuaire d'équipes</p>
+            <p id="hoverEvents" style="display:none;position:absolute;left:50px;top:196px;width:90px;font-size:14px;padding-left:10px;padding-top:5px;background-color:#6C6599;height:45px;color:white">Annuaire d'évènements</p>
+            <p id="hoverContact" style="display:none;position:absolute;left:50px;top:261px;width:90px;font-size:14px;padding-left:10px;padding-top:5px;background-color:#6C6599;height:45px;color:white">Nous contacter</p>
+
             <div class="items-down items">
 
             </div>

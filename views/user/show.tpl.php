@@ -64,44 +64,52 @@ $user = $this->data["user"];
         <?php endif;?>
         <?php if(User::itsMy($idUser)): ?>
           <div class="text-right">
-            <a href="<?= WEBROOT; ?>user/edit/<?php echo $user->getId(); ?>" class="btn btn-primary">Edit</a>
+            <a href="<?= WEBROOT; ?>user/edit/<?php echo $user->getId(); ?>" class="btn btn-primary">Modifier</a>
           </div>
         <?php else: ?>
           <a>&nbsp;</a>
         <?php endif; ?>
       </div>
     </div>
-    <div class="panel panel-primary2">
-      <div class="panel-heading"><h3 class="center header-li"> Profil de  <?php echo $user->getUsername(); ?></h3></div>
-      <div class="panel-body">
-        <div class="col-sm-12">
-          <div class="col-sm-6">
-            <ul class="header-ul">
-              <?php if(!empty($teams)){ ?>
-                <li><span class="fa fa-users"> Équipes</span></li>
-                <?php
-                foreach($teams as $team){
-                  $Team = Team::findById($team->getIdTeam());
-                  echo '
-                  <li class="li-list">
-                  <span class="form-content"><a href="'.WEBROOT.'team/show/'.$Team->getId().'">'.$Team->getTeamName().'</a></span>
-                  </li>
-                  ';
-                }
-                ?>
-                <?php }else{ ?>
-                  <li class="li-list">Aucune équipe</li>
-                  <?php } ?>
-                </ul>
+  </div>
+
+
+    <div class="col-sm-12">
+      <div class="col-sm-6">
+          <div class="panel panel-primary2">
+              <div class="panel-heading"><h2 class="center li-header">&Eacute;quipes</h2></div>
+              <div class="panel-body">
+                <ul class="header-ul">
+                <?php if(!empty($teams)){ ?>
+                  <li class="li-list"><span class="fa fa-users"> Équipes</span></li>
+                  <?php
+                  foreach($teams as $team){
+                    $Team = Team::findById($team->getIdTeam());
+                    echo '
+                    <li class="li-list">
+                    <span class="form-content"><a href="'.WEBROOT.'team/show/'.$Team->getId().'">'.$Team->getTeamName().'</a></span>
+                    </li>
+                    ';
+                  }
+                  ?>
+                  <?php }else{ ?>
+                    <li class="li-list">Aucune équipe</li>
+                    <?php } ?>
+                  </ul>
               </div>
-              <div class="col-sm-6">
+          </div>
+      </div>
+      <div class="col-sm-6">
+          <div class="panel panel-primary2">
+              <div class="panel-heading"><h2 class="center li-header">&Eacute;vènements</h2></div>
+              <div class="panel-body">
                 <ul class="header-ul">
                   <?php if(!empty($events)){ ?>
-                    <li><span class="fa fa-calendar-check-o"> Évènements</span></li>
+                    <li class="li-list"><span class="fa fa-calendar-check-o"> Évènements</span></li>
                     <?php
                     foreach($events as $event){
 
-                      echo $event->getName();
+                      echo '<li class="li-list"><span class="form-content"><a href="'.WEBROOT.'event/show/'.$event->getId().'">'.$event->getName().'</a></span></li>';
 
                     }
                     ?>
@@ -109,7 +117,8 @@ $user = $this->data["user"];
                   <?php } ?>
                 </ul>
               </div>
-            </div>
+          </div>
+      </div>
             <div class="text-right">
               <a href="#">&nbsp;</a>
             </div>
