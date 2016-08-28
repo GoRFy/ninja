@@ -39,7 +39,11 @@
         <a style="float:left" href="<?= WEBROOT; ?>"><img src="<?= WEBROOT;?>public/img/logo_SNWW_light.png" alt="Play Now" class="app-logo" height="80px"></a>
         <?php if(User::isConnected()):?>
         <div class="item dropdown header-burger icon" id="popin-notifications">
+            <?php if (User::hasNotif() == 0): ?>
              <span class="icon-menu fa fa-bell-o" id="notification-icon"></span>
+           <?php else: ?>
+             <span class="icon-menu fa fa-bell-o" style="color:red" id="notification-icon"></span><span style="color:red;font-size:12px;bottom:0;position:absolute;right:0"><?= User::hasNotif(); ?></span>
+           <?php endif; ?>
        </div>
         <div class="item dropdown header-burger icon">
             <a href="<?= WEBROOT; ?>user/show/<?php if(isset($_SESSION["user_id"])){ echo $_SESSION["user_id"]; } ?>" class="item">

@@ -251,6 +251,12 @@ class User extends basesql
 		}
 	}
 
+  public static function hasNotif(){
+    //$user = User::findById($_SESSION['user_id']);
+    $notification = Notification::findBy("id_user",$_SESSION['user_id'],"int");
+    return count($notification);
+  }
+
   public function getTeams(){
     $TeamHasUser =TeamHasUser::findBy("idUser",$this->id,'int');
     $allTeam = [];

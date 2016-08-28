@@ -21,7 +21,18 @@
         <div class="panel panel-success">
             <div class="panel-heading"><h2 class="center li-header">&Eacute;vènement à proximité</h2></div>
             <div class="panel-body">
+            <?php
+              //si user ville pas définis -> message avec redirection ves profi ledition, Sinon in affiche les events avec la ville tmtc
+              if($eventLocation == "unknow"){
+                echo "Pour connaitre les évènements à proximité de toi, <a href='".WEBROOT."user/edit/".$_SESSION['user_id']."'>Clique ici</a> pour définir ta ville !";
+              }else{
+                foreach($eventLocation as $oneEvent){
+                  $link = WEBROOT."event/show/".$oneEvent->getId();
+                  echo '<a href="'.$link.'">'.$oneEvent->getName().'</a><br>';
+                }
+              }
 
+              ?>
             </div>
         </div>
     </div>

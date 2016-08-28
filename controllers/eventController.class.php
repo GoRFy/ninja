@@ -120,7 +120,7 @@ class eventController {
                             foreach ($users as $user){
                                 $idUser = $user['id'];
                                 if ($owner != $idUser){
-                                    Notification::createNotification($idUser,$message="The event ".$nameEvent." has been edited !",$action=WEBROOT."event/list");
+                                    Notification::createNotification($idUser,$message="L'évènement ".$nameEvent." a été modifié !",$action=WEBROOT."event/list");
                                 }
                             }
                             $event->save();
@@ -151,7 +151,7 @@ class eventController {
                 $idUser = $user['id'];
                 $owner = $event->getOwner();
                 if ($owner != $idUser){
-                    Notification::createNotification($idUser,$message="The event ".$nameEvent." has been deleted !",$action=WEBROOT);
+                    Notification::createNotification($idUser,$message="L'évènement ".$nameEvent." a été supprimé !",$action=WEBROOT);
                 }
             }
             $event->delete();
@@ -167,7 +167,7 @@ class eventController {
             $event = Event::findById(intval($args[0]));
             $event->addUser(intval($_SESSION["user_id"]));
             $idOwner = $event->getOwner();
-            Notification::createNotification($idOwner,$message="Someone just joined your event, check it out !",$action=WEBROOT."event/update/".$args[0]);
+            Notification::createNotification($idOwner,$message="Un utilisateur vient de rejoindre ton évènement !",$action=WEBROOT."event/update/".$args[0]);
             header("location:" . WEBROOT . "event/list");
         } else {
             http_response_code(404);
@@ -229,7 +229,7 @@ class eventController {
             $event = Event::findById(intval($args[0]));
             $event->removeUser(intval($args[1]));
             $idOwner = $event->getOwner();
-            Notification::createNotification($idOwner,$message="Someone just left your event, check it out !",$action=WEBROOT."event/update/".$args[0]);
+            Notification::createNotification($idOwner,$message="Un utilisateur vient de quitter ton évènement !",$action=WEBROOT."event/update/".$args[0]);
             if ($event->getOwner() == $_SESSION["user_id"]) {
                 header("location:" . WEBROOT . "event/update/" . $event->getId());
             } else {

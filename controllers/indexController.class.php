@@ -24,6 +24,15 @@ class indexController
 						$eventPromoted = Event::findBy('id',$eventsPromoted,"int");
 						$view->assign("eventFamous",$eventPromoted);
 
+						$user = User::findById($_SESSION['user_id']);
+						$location = $user->getCity();
+						if($location == "NULL"){
+							$eventsLocation = "unknow";
+						}else{
+							$eventsLocation = Event::findBy("location",$location,"string");
+						}
+						$view->assign('eventLocation',$eventsLocation);
+
 		} else {
 	   		header("location: ".WEBROOT."landing/welcome");
 		}

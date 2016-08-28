@@ -191,11 +191,11 @@ class userController
 					header("location: ".WEBROOT);
 				}
 				else {
-					$view->assign("error_message", "<span class='info'> Couldn't find you :( </span>");
+					$view->assign("error_message", "<span class='info'> Combinaison email/mot de passe incorrecte ou inexistante ! </span>");
 				}
 			}
 			else {
-				$view->assign("error_message", "<span class='info'> Couldn't find you :( </span>");
+				$view->assign("error_message", "<span class='info'> Combinaison email/mot de passe incorrecte ou inexistante ! </span>");
 			}
 		}
 		$view->assign("logErrors", $logErrors);
@@ -227,10 +227,10 @@ class userController
 				$user[0]->sendEmail("reset");
 				$view->assign(
 					"mail_new_pwd",
-					"<span class='info'> An email has just been sent to " . $user[0]->getEmail() . ", for reset password. Please check your email box. </span>"
+					"<span class='info'> Un email a bien été envoyé à " . $user[0]->getEmail() . ", pour réinitialiser votre mot de passe, regardez votre boite mail ! </span>"
 				);
 			} else {
-				$view->assign("mail_new_pwd", "<span class='info'> Couldn't find this address </span>");
+				$view->assign("mail_new_pwd", "<span class='info'> Adresse email introuvable ! </span>");
 			}
 		}
 	}
@@ -246,7 +246,7 @@ class userController
 			// Good token ?
 			if ($user[0]->getToken() == $args["token"] || $user[0]->getToken() == $_POST["token"]) {
 				$view = new View();
-				$form = User::getForm("setNewPassword");
+				$form = $user->getForm("setNewPassword");
 				$form["struct"]["email"]["value"] = $user[0]->getEmail();
 				$form["struct"]["token"]["value"] = $user[0]->getToken();
 				$formErrors = [];
@@ -259,7 +259,7 @@ class userController
 						$user[0]->save();
 						$view->assign(
 							"success",
-							"<span class='info'> Your Password has been updated ! You can now log in with you new password :) </span>"
+							"<span class='info'> Mot de passe modifié ! </span>"
 						);
 					}
 				}
