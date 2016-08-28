@@ -153,10 +153,10 @@ class userController
 				$user->setToken();
 				$now = date("Y-m-d H:i:s");
 				$user->setDateCreated($now);
-				$user->save();
-                $_SESSION['username'] = $_POST['username'];
 				if($user->sendEmail("subscribe")) {
 					$view->assign( "mailerMessage", "<span class='info'> Email envoyé à ".$user->getEmail() . "</span>." );
+					$user->save();
+					$_SESSION['username'] = $_POST['username'];
 				} else {
 					$view->assign( "mailerMessage", "<span class='info'> Une erreur est survenue, veuillez nous contacter</span>." );
 				}

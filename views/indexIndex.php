@@ -1,4 +1,24 @@
 <div class="row">
+  <div class="col-sm-12">
+    <div class="col-sm-4 col-sm-offset-4">
+        <div class="panel panel-success">
+            <div class="panel-heading"><h2 class="center li-header">FAMOUS</h2></div>
+            <div class="panel-body">
+                <?php
+                if($eventFamous == null){
+                    echo '<h1> Pas encore d\'évènement promu</h1>';
+                }else{
+                    foreach($eventFamous as $eventFamous){
+                      $link = WEBROOT."event/show/".$eventFamous->getId();
+                      echo '<a href="'.$link.'">'.$eventFamous->getName().'</a><br>';
+                    }
+                }
+                ?>
+            </div>
+        </div>
+    </div>
+  </div>
+  <div class="col-sm-12">
     <div class="col-sm-4">
         <div class="panel panel-primary2">
             <div class="panel-heading"><h2 class="center li-header">10 derniers inscris</h2></div>
@@ -50,7 +70,7 @@
             </div>
         </div>
     </div>
-
+</div>
 
     <?php
     // Pour créer une notif test

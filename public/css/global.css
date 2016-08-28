@@ -124,12 +124,25 @@ header .icon {
     transition: all .15s ease-in-out;
 }
 
-header .icon:hover {
+header .icon2 {
+    display: block;
+    margin-left:40px;
+    float: left;
+    text-decoration: none;
+    line-height: 1;
+    height: 46px;
+    vertical-align: middle;
+    color: #8E8D8F;
+    transition: all .15s ease-in-out;
+}
+
+header .icon:hover, header .icon2:hover {
     color: #13191C;
     border-bottom: 4px solid #13191C;
 }
 
-header .icon span {
+header .icon span,
+header .icon2 span  {
     display: block;
     float: left;
     font-size: 20px;
@@ -137,8 +150,7 @@ header .icon span {
     margin-left: 5px;
 }
 
-
-header .icon .text {
+header .icon .text,header .icon2 .text  {
     font-size: 14px;
     font-weight: 600;
     margin-top: 19px;
@@ -435,6 +447,13 @@ ul {
   cursor:pointer;
 }
 
+.icons-primary3{
+  border:none;
+  padding:8px;
+  border-radius:4px;
+  cursor:pointer;
+}
+
 
 
 /*******************
@@ -620,4 +639,19 @@ position: absolute;
 
 #search-content-results {
     padding-top: 15px;
+}
+
+
+/*****
+OTHER
+*****/
+#compteurLike{
+  font-weight: bold;
+  font-style:oblique;
+  border-radius:8px;
+  border:1px dotted #6C6599;
+  color : #6C6599;
+  padding:7px;
+  margin:10px;
+
 }

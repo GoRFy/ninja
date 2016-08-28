@@ -243,38 +243,6 @@ class eventController {
         }
     }
 
-    public function deleteCommentAction($args){
-      if(isset($args[0])){
-        $commentaire = Comment::findById($args[0]);
-        $commentaire->delete();
-
-        $eventHasComment = eventHasComment::findBy("id_comment",$args[0],"int");
-        $eventHasComment[0]->delete();
-        Helpers::getMessageAjaxForm("Comment Deleted !");
-      }
-    }
-
-    public function cancelSignalmentAction($args){
-      if(isset($args[0])){
-        $comment = Comment::findById($args[0]);
-        $comment->setSignalment(0);
-        $comment->save();
-
-        Helpers::getMessageAjaxForm("Comment's signalment canceled !");
-      }
-    }
-
-
-    public function signalCommentAction($args){
-      if(isset($args[0]) && User::isConnected()){
-          $comment = Comment::findById($args[0]);
-          $comment->setSignalment(1);
-          $comment->save();
-
-          Helpers::getMessageAjaxForm("Comment signaled !");
-      }
-    }
-
     public function searchAction($args)
     {
         header('Content-Type: application/json');
@@ -321,15 +289,33 @@ class eventController {
 
     public function likeAction($args){
         if (User::isConnected()) {
-            if (!empty($args[0])) {
-
+            if (!empty($args)) {
+              $helper = new Helpers();
+              $event = EventHasVote::findBy(['idUser','idEvent'],[$_SESSION['user_id'],$args['idEvent']],['int','int']);
+              if($event){
+                if(!EventHasVote::findBy(['idUser','idEvent',"upOrDown"],[$_SESSION['user_id'],$args['idEvent'],$args['upOrDown']],['int','int','int'])){
+                  $event[0]->setUpOrDown($args['upOrDown']);
+                  $event[0]->save();
+                  $classe = ".vote_area".$args["idEvent"];
+                  $helper->getMessageAjaxForm("Vote changé !","like",$args['upOrDown'],$classe);
+                }else{
+                  $helper->getMessageAjaxForm("Vous avez déjà voté !");
+                }
+              }else{
+                $event_has_votes = new EventHasVote();
+                $event_has_votes->setIdUser($_SESSION['user_id']);
+                $event_has_votes->setIdEvent($args['idEvent']);
+                $event_has_votes->setUpOrDown($args['upOrDown']);
+                $event_has_votes->save();
+                $classe = ".vote_area".$args["idEvent"];
+                $helper->getMessageAjaxForm("Evenement aimé !","like",$args['upOrDown'],$classe);
+              }
             } else {
-
+              header("location:" . WEBROOT);
             }
-            $view = new View();
-            $view->setView("event/like.tpl");
         } else {
             header("location:" . WEBROOT);
         }
     }
+
 }

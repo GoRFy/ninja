@@ -2,33 +2,28 @@
 <script type="text/javascript"> var sessionId = <?= $_SESSION["user_id"] ;?></script>
 
 <div class="row">
-    <div class="col-sm-6 col-sm-offset-3">
-        <div class="panel panel-primary">
-            <div class="panel-heading">Manage events</div>
-            <div class="panel-body">
-                <a class="btn btn-success" href="<?= WEBROOT ?>event/create">Create Event</a>
-            </div>
-        </div>
-
+        <p align="center"><a href="<?= WEBROOT;?>event/create"class="btn btn-primary">Créer le tien dès maintenant !</a></p>
         <div align="center">
-            <h3 class="center header-li ">Or find one :</h3>
+            <h3 class="center header-li ">Ou trouves en un :</h3>
             <input type="text" id="search-content">
-            <select id="select-criteria">
-                <option value="1" selected>By name</option>
-                <option value="2">By owner</option>
-                <option value="3">By tag</option>
-            </select>
         </div>
         <div id="search-content-results"></div>
 
     <div class="col-sm-12" id="all-content">
           <?php foreach ($events as $key => $event): ?>
               <?php if (new Datetime($event->getToDate()) > new Datetime()): ?>
-                  <div class="panel panel-success">
+                <div class="col-sm-6">
+                  <div class="panel panel-primary">
                       <div class="panel-heading"><?= $event->getName(); ?></div>
                       <div class="panel-body">
-                          <p class="underlined">Owner : <?= $event->getOwnerName(); ?></p>
-                          <div class="row">
+                          <div class="underlined" style="padding-bottom:20px">Crée par <a href="<?= WEBROOT?>user/show/<?= $event->getOwner()?>"><?= $event->getOwnerName(); ?></a>
+                            <div class="vote_area<?= $event->getId()?> pull-right" >
+                              <i href="#" data-url="event/like" aria-hidden="true" data-event="<?= $event->getId(); ?>" data-upordown="1" class="icons-primary3 btn-success fa fa-arrow-down fa-thumbs-o-up ajax-link" ></i>&nbsp;
+                              <span id="compteurLike"><?= EventHasVote::getAllVotes($event->getId()) ?></span>
+                              <i href="#" data-url="event/like" aria-hidden="true" data-event="<?= $event->getId(); ?>" data-upordown="0"class="icons-primary3 btn-danger fa fa-arrow-down fa-thumbs-o-down ajax-link" ></i>&nbsp;
+                            </div>
+                          </div>
+                          <div class="row" style="padding-top:14px">
                               <div class="col-sm-6">
                                   <div class="tag-box">
                                       <?php foreach (explode(",", $event->getTags()) as $key => $tag): ?>
@@ -41,11 +36,11 @@
                               </div>
                           </div>
                           <ul class="item-list">
-                              <li>From : <?= $event->getFromDate(); ?></li>
-                              <li>To : <?= $event->getToDate(); ?></li>
-                              <li>Joignable until <?= $event->getJoignableUntil(); ?></li>
+                              <li>Du <?= $event->getFromDate(); ?>
+                               - au <?= $event->getToDate(); ?></li>
+                              <li>Inscription ouverte jusqu'au <?= $event->getJoignableUntil(); ?></li>
                           </ul>
-                          <p>People : </p>
+                          <p>Membres : </p>
                           <ul class="item-list">
                               <?php foreach ($event->gatherUsers() as $key => $user): ?>
                                   <li><?= $user["username"] ?></li>
@@ -61,9 +56,11 @@
                           <?php if ($event->getOwner() == $_SESSION["user_id"]): ?>
                               <a href="<?= WEBROOT; ?>event/update/<?= $event->getId() ?>" class="btn btn-primary">Manage</a>
                           <?php endif; ?>
-                          <a href="<?= WEBROOT;?>event/show/<?= $event->getId() ?>" class="btn btn-success pull-right">Details</a>
+
+                          <a href="<?= WEBROOT;?>event/show/<?= $event->getId() ?>" class="btn btn-primary pull-right">Details</a>
                       </div>
                   </div>
+                </div>
               <?php endif; ?>
             <?php endforeach; ?>
     </div>

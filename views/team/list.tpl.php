@@ -7,7 +7,7 @@
         <h3 class="center header-li ">Ou trouves en une :</h3>
         <input type="text" id="search-content">
     </div>
-    <div id="search-content-results""></div>
+    <div id="search-content-results"></div>
 
 <div class="col-sm-12" id="all-content">
     <?php

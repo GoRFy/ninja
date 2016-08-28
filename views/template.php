@@ -36,7 +36,7 @@
               <?php endif; ?>
           </ul>
       </div>
-        <a href="<?= WEBROOT; ?>"><img src="<?= WEBROOT;?>public/img/logo_SNWW_light.png" alt="Play Now" class="app-logo" height="80px"></a>
+        <a style="float:left" href="<?= WEBROOT; ?>"><img src="<?= WEBROOT;?>public/img/logo_SNWW_light.png" alt="Play Now" class="app-logo" height="80px"></a>
         <?php if(User::isConnected()):?>
         <div class="item dropdown header-burger icon" id="popin-notifications">
              <span class="icon-menu fa fa-bell-o" id="notification-icon"></span>
@@ -47,11 +47,24 @@
             </a>
        </div>
      <?php endif; ?>
-        <div class="item dropdown header-burger icon">
-            <?php if (User::isConnected()): ?>
-                <span>Bonjour <?= $_SESSION["username"] ?></span>
-            <?php endif; ?>
-        </div>
+     <div class="icon2">
+         <?php if (User::isConnected()): ?>
+           <?php
+             if($_SESSION['controller'] == "index"){
+               $informationHeader = "Bonjour ".$_SESSION["username"];
+             }else if($_SESSION['controller'] == "team"){
+               $informationHeader = "Equipe";
+             }else if($_SESSION['controller'] == "user"){
+               $informationHeader = "Utilisateur";
+             }else if($_SESSION['controller'] == "event"){
+               $informationHeader = "Evenement";
+             }else if($_SESSION['controller'] == "contact"){
+               $informationHeader = "Contact";
+             }
+           ?>
+             <span ><?= $informationHeader; ?></span>
+         <?php endif; ?>
+     </div>
     </header>
   <?php else: ?>
     <header class="header">

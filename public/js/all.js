@@ -341,8 +341,12 @@ $(function ($) {
       }
 
       if ($(this).is(".ajax-link")) {
+
           data.idUser = $(this).data("user");
           data.idTeam = $(this).data("team");
+          data.idEvent = $(this).data("event");
+          data.upOrDown = $(this).data("upordown");
+
           data.type = $(this).data("type");
           data.comment = $(this).data("comment");
 
@@ -421,11 +425,7 @@ $(function ($) {
                   url: action,
                   data: data
               }).success(function (data) {
-                  if(data.refresh == true){
-                    showMessage(data.message, "success",true);
-                  }else{
-                    showMessage(data.message, "success",false);
-                  }
+                  showMessage(data.message, "success",data.other,data.valueWithOther,data.classe);
                   triggerCallback(data);
                 // J'aimerais bien rajouter un petit refresh de window ici.
             }).fail(function (jqXHR, textStatus) {
@@ -447,7 +447,7 @@ $(function ($) {
     -- Message box --
 ****************************/
 
-function showMessage(msg, code) {
+function showMessage(msg, code, other,valueWithOther,classe) {
     $box = $(".msg-box");
     $box.find(".text .text-content").html(msg);
     $box.addClass(code);
@@ -456,7 +456,29 @@ function showMessage(msg, code) {
         $box.fadeOut();
     }, 5000);
 
+    if(other == "like"){
+      updateNumberVote(valueWithOther,classe);
+    }
+
 }
+
+function updateNumberVote(upOrDown,classe){
+    var valueActuel = parseInt($(classe).find("#compteurLike").text(),10);
+    if(upOrDown == 1){
+      valueActuel =  valueActuel + 1;
+      if(valueActuel == 0){
+        valueActuel = 1;
+      }
+    }else{
+      valueActuel = valueActuel - 1;
+      if(valueActuel == 0){
+        valueActuel = -1;
+      }
+    }
+    $(classe).find("#compteurLike").empty();
+    $(classe).find("#compteurLike").text(valueActuel);
+}
+
 
 /***************************
     -- Notification box --
@@ -539,6 +561,7 @@ function getDiscussions() {
         });
     }
 }
+
 
 
 function refreshMessages(currentUserId, discussionId) {

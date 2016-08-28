@@ -20,6 +20,9 @@ class indexController
 						$events = Event::findAll(10,"id",["name","id"]);
 						$view->assign("events",$events);
 
+						$eventsPromoted = EventHasVote::getMaxVoted();
+						$eventPromoted = Event::findBy('id',$eventsPromoted,"int");
+						$view->assign("eventFamous",$eventPromoted);
 
 		} else {
 	   		header("location: ".WEBROOT."landing/welcome");

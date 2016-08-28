@@ -17,10 +17,13 @@ class Helpers
     * @param string
     * @return json
     */
-  public function getMessageAjaxForm($message){
+  public function getMessageAjaxForm($message,$other="none",$valueWithOther="none",$classe="none"){
     http_response_code(200);
     $response["status"] = "success";
     $response["message"] = $message;
+    $response["other"] = $other;
+    $response["valueWithOther"] = $valueWithOther;
+    $response["classe"] = $classe;
 
     header('Content-type: application/json');
     echo json_encode($response);

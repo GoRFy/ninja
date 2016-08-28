@@ -17,7 +17,7 @@ class routing{
 		unset($explode_uri[0]);
 		unset($explode_uri[1]);
 		$args = array_merge($explode_uri, $_REQUEST);
-
+		$_SESSION['controller'] = $controller;
 		return ["controller" => $controller, "action" => $action, "args" => $args];
 	}
 }
